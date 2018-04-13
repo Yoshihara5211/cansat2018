@@ -18,7 +18,7 @@ Arduino Mega
  
 ## Sensors
 ### Accelerometer, Gyrometer, Magnetometer
- coming soon...
+coming soon...
 
 ### Motor
 coming soon...
@@ -37,15 +37,3 @@ OpenLog or AE-MICRO- SD-DIP
 
 ### Wireless 
 XBee or Twelite
-
-# Overview
-## cansat2017.ino 
- * init
- * loop 
-
-## cansat.cpp
- * sequences
-
-## nineaxis.cpp
- * IMU data
- * Attitude Estimation
