@@ -7,6 +7,10 @@
 #define _CONSTANT_H_
 
 //ピン番号指定
+#define GPS_RX_PIN   // 適当なデジタルピン
+#define GPS_TX_PIN   // 適当なデジタルピン
+#define LIGHT_PIN   // 適当なアナログピン
+
 
 //シークエンス
 #define PREPARING 0   // 電源on

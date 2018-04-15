@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "Arduino.h"
-#include <HardwareSerial.h>
 #include "constant.h" //全ての定数はここ
 #include "cansat.h"
 void setup() {
