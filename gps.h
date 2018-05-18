@@ -8,28 +8,27 @@
 #include <stdio.h>
 #include <string.h>
 #include "Arduino.h"
-#include <SoftwareSerial.h>
+#include <HardwareSerial.h>
 #include <TinyGPS++.h>
 
 class Gps {
   public:
     // 関数
-    Gps(int gpsRx, int gpsTx);
+    Gps();
     ~Gps();
-    TinyGPSPlus tinygps;
-    void setupGps();
-    void readGps();
+    HardwareSerial SerialGps = Serial1;
+    TinyGPSPlus tinygps;  // ライブラリからオブジェクト生成
+    void setupGps();  // setup + date情報
+    void readGps();  //  GPS情報読み取り
 
     // 変数
-    int _gpsRx;
-    int _gpsTx;
     float lon;   // 経度
     float lat;   // 緯度
     short year, month, day, hour, minute, second;
-    float baudrate;
-    float deg;
-    float alt;
-    String gpsDate; 
+    float baudrate;  // 通信速度
+    float deg;  // ??? 
+    float alt;  // 高度(割と雑)
+    String gpsDate;  // 変数まとめ
 };
 
 #endif

@@ -7,21 +7,29 @@
 #define _CONSTANT_H_
 
 //ピン番号指定
-#define GPS_RX_PIN   // 適当なデジタルピン
-#define GPS_TX_PIN   // 適当なデジタルピン
-#define LIGHT_PIN   // 適当なアナログピン
-
+#define LIGHT_PIN 1  
+#define LEFT_MOTOR_FIN_PIN 2
+#define LEFT_MOTOR_RIN_PIN 3
+#define RIGHT_MOTOR_FIN_PIN 4
+#define RIGHT_MOTOR_RIN_PIN 5
+#define MIKE_FRONT_PIN 6
+#define MIKE_RIGHT_PIN 7
+#define MIKE_LEFT_PIN 8 
+#define MIKE_BACK_PIN 9
 
 //シークエンス
-#define PREPARING 0   // 電源on
-#define FLYING   // 格納検知
-#define DROPING   // 放出検知
-#define LANDING   // 着地検知
-#define RUNNING   // 走行アルゴリズム
-#define GOAL   // ゴール検知
-#define STUCKING  // スタック検知
+#define PREPARING 0   // 電源オン
+#define FLYING 1  // 格納検知
+#define DROPING 2  // 放出検知
+#define LANDING 3  // 着地検知
+#define RUNNING 4  // 走行アルゴリズム
+#define GOAL 5  // ゴール検知
+#define STUCKING 6  // スタック検知
 
 //閾値
+#define ANGLE_THRE 1
+
+
 
 #endif
 
