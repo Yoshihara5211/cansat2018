@@ -16,18 +16,18 @@ class Radio {
     // 関数
     Radio();
     ~Radio();
-    XBee xbee = XBee();
-    XBeeResponse response = XBeeResponse();
-    ZBRxResponse rx = ZBRxResponse();
-    HardwareSerial SerialXbee = Serial2;
-    void setupRadio();
-    void getData();
-    void sendData(String s);
+    XBee xbee = XBee();  // ライブラリからオブジェクト生成
+    XBeeResponse response = XBeeResponse();  // ライブラリからオブジェクト生成
+    ZBRxResponse rx = ZBRxResponse();  // ライブラリからオブジェクト生成
+    HardwareSerial SerialXbee = Serial2;  // Serial2を使う
+    void setupRadio();  // setup
+    void getData();  // 地上局からステートが送られてきたら受け取る
+    void sendData(String s);  // データ送信
 
     // 変数
     String receiveString;
-    int intData;
-    int stateData;
+    int intData;  
+    int stateData;  
 };
 
 #endif

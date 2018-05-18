@@ -15,8 +15,8 @@ class Sd {
   // 関数
   Sd();
   ~Sd();
-  void setupSd();
-  void printSd(String _dataIn);
+  void setupSd();  // setup
+  void printSd(String _dataIn);  // log保存
   
   // 変数
   String dataSet;

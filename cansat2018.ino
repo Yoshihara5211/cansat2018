@@ -10,12 +10,16 @@
 #include "Arduino.h"
 #include "constant.h" //全ての定数はここ
 #include "cansat.h"
-void setup() {
-  // put your setup code here, to run once:
 
+Cansa cansat;
+
+
+void setup() {
+cansat.setup();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+cansat.sequence();
+cansat.writeSd();
+cansat.sendXbee();
 }

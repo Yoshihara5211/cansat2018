@@ -20,8 +20,8 @@ void Gps::setupGps() {
       year = tinygps.date.year();
       month = tinygps.date.month();
       day = tinygps.date.day();
-      data1 = "year, month, day, hour, minute, second";
-      data2 = "lon, lat, alt, baudrate, deg";
+      String data1 = "year, month, day, hour, minute, second";
+      String data2 = "lon, lat, alt, baudrate, deg";
       Serial.println(data1);
       Serial.println(data2);
     }

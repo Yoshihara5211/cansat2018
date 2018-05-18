@@ -17,20 +17,18 @@ class Gps {
     Gps();
     ~Gps();
     HardwareSerial SerialGps = Serial1;
-    TinyGPSPlus tinygps;
-    void setupGps();
-    void readGps();
+    TinyGPSPlus tinygps;  // ライブラリからオブジェクト生成
+    void setupGps();  // setup + date情報
+    void readGps();  //  GPS情報読み取り
 
     // 変数
     float lon;   // 経度
     float lat;   // 緯度
     short year, month, day, hour, minute, second;
-    float baudrate;
-    float deg;
-    float alt;
-    String data1;
-    String data2;
-    String gpsDate; 
+    float baudrate;  // 通信速度
+    float deg;  // ??? 
+    float alt;  // 高度(割と雑)
+    String gpsDate;  // 変数まとめ
 };
 
 #endif

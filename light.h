@@ -14,11 +14,11 @@ class Light {
   // 関数
   Light(int lightPin);
   ~Light();
-  void readLight();
+  void readLight();  // アナログ読み取り
 
   // 変数
-  int _lightPin;
-  int lightValue;
+  int _lightPin;  
+  int lightValue;  // アナログ値(0 ~ 1023)
 };
 
 #endif _LIGHT_H_
