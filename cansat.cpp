@@ -50,6 +50,13 @@ void Cansat::guidance1(float nowLat, float nowLon, float nowDeg, float goalLat, 
   }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////
+/**
+  @void guidance2
+  @author Kosuge
+  @date Created: 20170529
+*/
 void Cansat::guidance2(float nowLat, float nowLon, float goalLat, float goalLon) {
   // Lon=経度=x
   // Lat=緯度=y
@@ -79,7 +86,7 @@ void Cansat::guidance2(float nowLat, float nowLon, float goalLat, float goalLon)
     leftMotor.go(255*0.8);
   }
 }
-
+/////////////////////////////////////////////////////////////////////////////////////////
 
 
 
