@@ -21,5 +21,5 @@ class Light {
   int lightValue;  // アナログ値(0 ~ 1023)
 };
 
-#endif _LIGHT_H_
+#endif 
 
