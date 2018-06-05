@@ -14,8 +14,8 @@
 #include "gps.h"
 #include "sd.h"
 #include "radio.h"
-//#include "acc.h"
-//#include "compass.h"
+#include "acc.h"
+#include "compass.h"
 //#include "mike.h"
 
 class Cansat {
@@ -26,6 +26,7 @@ class Cansat {
     Motor leftMotor = Motor(LEFT_MOTOR_FIN_PIN, LEFT_MOTOR_RIN_PIN);
     Motor rightMotor = Motor(RIGHT_MOTOR_FIN_PIN, RIGHT_MOTOR_RIN_PIN);
     Light light = Light(LIGHT_PIN);
+    Acc acc = Acc(ACC_X_PIN, ACC_Y_PIN, ACC_Z_PIN);
     Mic mic1 = Mic(MIC_PIN1);
     Mic mic2 = Mic(MIC_PIN2);
     Mic mic3 = Mic(MIC_PIN3);
@@ -39,8 +40,7 @@ class Cansat {
     Sd sd;
 
     // I2C通信
-    //Acc acc;
-    //Compass compass;
+    Compass compass;
 
     // メイン関数
     void setup();  // 各センサ，コンポーネント，シーケンスのsetup(ここでキャリブレーションをしたい)

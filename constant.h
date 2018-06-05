@@ -12,6 +12,9 @@
 #define LEFT_MOTOR_RIN_PIN 3
 #define RIGHT_MOTOR_FIN_PIN 4
 #define RIGHT_MOTOR_RIN_PIN 5
+#define ACC_X_PIN 6
+#define ACC_Y_PIN 7
+#define ACC_Z_PIN 8
 #define MIKE_FRONT_PIN 6
 #define MIKE_RIGHT_PIN 7
 #define MIKE_LEFT_PIN 8 
