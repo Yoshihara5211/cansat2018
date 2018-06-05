@@ -26,7 +26,10 @@ class Cansat {
     Motor leftMotor = Motor(LEFT_MOTOR_FIN_PIN, LEFT_MOTOR_RIN_PIN);
     Motor rightMotor = Motor(RIGHT_MOTOR_FIN_PIN, RIGHT_MOTOR_RIN_PIN);
     Light light = Light(LIGHT_PIN);
-    // Mike mike = Mike(MIKE_PIN);
+    Mic mic1 = Mic(MIC_PIN1);
+    Mic mic2 = Mic(MIC_PIN2);
+    Mic mic3 = Mic(MIC_PIN3);
+    Mic mic4 = Mic(MIC_PIN4);
 
     // シリアル通信
     Radio radio;
@@ -59,6 +62,10 @@ class Cansat {
     void guidance1(float nowLat, float nowLon, float nowDeg, float goalLat, float goalLon);  // GPS + COMPASS
     void guidance2(float nowLat, float nowLon, float goalLat, float goalLon);  // GPS only　<<<<<---小菅
     void guidance3();  // <<<<<----富吉
+    //////////////////////////////////////
+    //音の情報を取得する関数
+    void sound_read();
+    int maxvol,maxfreq;
     //////////////////////////////////////
     // 音源に近づくアルゴリズム
     // 各マイクセンサ(3つ or ４つ)から得られた各周波数帯における振幅値を引数に
