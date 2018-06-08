@@ -16,21 +16,22 @@
 #include "radio.h"
 #include "acc.h"
 #include "compass.h"
-#include "mic.h"
+//#include "mic.h"
 
 class Cansat {
   public:
+  Cansat();
+  ~Cansat();
     // オブジェクト生成
-
     // ピン指定
     Motor leftMotor = Motor(LEFT_MOTOR_FIN_PIN, LEFT_MOTOR_RIN_PIN);
     Motor rightMotor = Motor(RIGHT_MOTOR_FIN_PIN, RIGHT_MOTOR_RIN_PIN);
     Light light = Light(LIGHT_PIN);
     Acc acc = Acc(ACC_X_PIN, ACC_Y_PIN, ACC_Z_PIN);
-    Mic mic1 = Mic(MIC_PIN1);
-    Mic mic2 = Mic(MIC_PIN2);
-    Mic mic3 = Mic(MIC_PIN3);
-    Mic mic4 = Mic(MIC_PIN4);
+//    Mic mic1 = Mic(MIC_PIN1);
+//    Mic mic2 = Mic(MIC_PIN2);
+//    Mic mic3 = Mic(MIC_PIN3);
+//    Mic mic4 = Mic(MIC_PIN4);
 
     // シリアル通信
     Radio radio;

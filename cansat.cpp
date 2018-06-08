@@ -5,6 +5,13 @@
 */
 #include "cansat.h"
 
+Cansat::Cansat() {
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(YELLOW_LED_PIN, OUTPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+}
+
 void Cansat::setup() {
   sd.setupSd;
   radio.setupRadio();
@@ -22,6 +29,21 @@ void Cansat::test() {
   mic.readMic();
   writeSd();
   sendXbee();
+  tone(PINNO, 262, BEAT) ; // ド
+  delay(BEAT) ;
+  tone(PINNO, 294, BEAT) ; // レ
+  delay(BEAT) ;
+  tone(PINNO, 330, BEAT) ; // ミ
+  delay(BEAT) ;
+  tone(PINNO, 349, BEAT) ; // ファ
+  delay(BEAT) ;
+  tone(PINNO, 392, BEAT) ; // ソ
+  delay(BEAT) ;
+  tone(PINNO, 440, BEAT) ; // ラ
+  delay(BEAT) ;
+  tone(PINNO, 494, BEAT) ; // シ
+  delay(BEAT) ;
+  tone(PINNO, 523, BEAT) ; // ド
 }
 
 
@@ -183,6 +205,12 @@ void Cansat::guidance4() {
   }
   // この後cansatに東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
 }
+
+
+
+
+
+
 
 
 // state, millis, light, lat, lon, ax, ay, az, deg, mic...

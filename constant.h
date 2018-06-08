@@ -6,19 +6,25 @@
 #ifndef _CONSTANT_H_
 #define _CONSTANT_H_
 
-//ピン番号指定
-#define LIGHT_PIN 1  
-#define LEFT_MOTOR_FIN_PIN 2
-#define LEFT_MOTOR_RIN_PIN 3
-#define RIGHT_MOTOR_FIN_PIN 4
-#define RIGHT_MOTOR_RIN_PIN 5
-#define ACC_X_PIN 6
-#define ACC_Y_PIN 7
-#define ACC_Z_PIN 8
-#define MIKE_FRONT_PIN 6
-#define MIKE_RIGHT_PIN 7
-#define MIKE_LEFT_PIN 8 
-#define MIKE_BACK_PIN 9
+//ピン番号指定  
+#define LEFT_MOTOR_FIN_PIN 1
+#define LEFT_MOTOR_RIN_PIN 2
+#define RIGHT_MOTOR_FIN_PIN 3
+#define RIGHT_MOTOR_RIN_PIN 4
+#define RED_LED_PIN 10
+#define YELLOW_LED_PIN 11
+#define GREEN_LED_PIN 12
+#define BUZZER_PIN 13
+#define ACC_X_PIN A0
+#define ACC_Y_PIN A1
+#define ACC_Z_PIN A2
+#define LIGHT_PIN A3
+#define MIC_FRONT_PIN A4
+#define MIC_RIGHT_PIN A5
+#define MIC_LEFT_PIN A6 
+#define MIC_BACK_PIN A7
+
+#define BEAT 100   // 音の長さを指定
 
 //シークエンス
 #define PREPARING 0   // 電源オン
