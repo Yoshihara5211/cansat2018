@@ -12,10 +12,10 @@
 #define LEFT_MOTOR_RIN_PIN 3
 #define RIGHT_MOTOR_FIN_PIN 4
 #define RIGHT_MOTOR_RIN_PIN 5
-#define MIKE_FRONT_PIN 6
-#define MIKE_RIGHT_PIN 7
-#define MIKE_LEFT_PIN 8 
-#define MIKE_BACK_PIN 9
+#define MIC_FRONT_PIN 6
+#define MIC_RIGHT_PIN 7
+#define MIC_LEFT_PIN 8 
+#define MIC_BACK_PIN 9
 
 //シークエンス
 #define PREPARING 0   // 電源オン
@@ -28,6 +28,7 @@
 
 //閾値
 #define ANGLE_THRE 1
+#define SOUND_VOLUME 4
 
 
 

@@ -26,10 +26,10 @@ class Cansat {
     Motor leftMotor = Motor(LEFT_MOTOR_FIN_PIN, LEFT_MOTOR_RIN_PIN);
     Motor rightMotor = Motor(RIGHT_MOTOR_FIN_PIN, RIGHT_MOTOR_RIN_PIN);
     Light light = Light(LIGHT_PIN);
-    Mic mic1 = Mic(MIC_PIN1);
-    Mic mic2 = Mic(MIC_PIN2);
-    Mic mic3 = Mic(MIC_PIN3);
-    Mic mic4 = Mic(MIC_PIN4);
+    Mic mic1 = Mic(MIC_FRONT_PIN);
+    Mic mic2 = Mic(MIC_RIGHT_PIN);
+    Mic mic3 = Mic(MIC_LEFT_PIN);
+    Mic mic4 = Mic(MIC_BACK_PIN);
 
     // シリアル通信
     Radio radio;
@@ -61,12 +61,12 @@ class Cansat {
     void stucking();
     void guidance1(float nowLat, float nowLon, float nowDeg, float goalLat, float goalLon);  // GPS + COMPASS
     void guidance2(float nowLat, float nowLon, float goalLat, float goalLon);  // GPS only　<<<<<---小菅
-    void guidance3();  // <<<<<----富吉
+    // void guidance3();  // <<<<<----富吉
     //////////////////////////////////////
     // 音の情報を取得する関数
     void sound_read();
-    // 最大音量、最大音周波数、どの向きから音が来てるか(1→2→3→4、前→右→後→左)
-    int maxvol,maxfreq,direc;
+    // 最大音量、最大音周波数、どの向きから音が来てるか(1→2→3→4、前→右→左→後)
+    int maxvol, maxfreq, direc;
     // 地磁気センサ＋マイクのアルゴリズム
     void guidance3();
     // 地磁気センサなしでの走行アルゴリズム

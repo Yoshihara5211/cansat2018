@@ -86,7 +86,10 @@ void Cansat::guidance2(float nowLat, float nowLon, float goalLat, float goalLon)
     leftMotor.go(255 * 0.8);
   }
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////
+
+
 void Cansat::sound_read() {
   mic1.FFT();
   mic2.FFT();
@@ -97,10 +100,10 @@ void Cansat::sound_read() {
   int freq[4] = {0, 0, 0, 0}; //各マイクが拾った音の高さ
   int i, j; // for文用
 
-  // 2kHz未満の音絶対拾わないマン
+  // 2kHz未満の音絶対拾わない
   for (i = 32; i < 64; i++) {
 
-    // なぜか音量がchar型でしかfftできないのでここでint型に変換
+    // なぜかdataがchar型なのでここでint型に変換
     sprintf(mic1.buf, "%5d", mic1.data[i]);
     sprintf(mic2.buf, "%5d", mic2.data[i]);
     sprintf(mic3.buf, "%5d", mic3.data[i]);
@@ -129,8 +132,9 @@ void Cansat::sound_read() {
       freq[3] = i;
     }
   }
-  //4つのマイクが拾った音の内
-  maxvol = 0, maxfreq = 0;
+  //4つのマイクが拾った音の中で、最も大きいもの
+  //maxvol→大きさ、maxfreq→高さ、direc→どっちから音が来てるか
+  maxvol = 0, maxfreq = 0, direc = 0;
   for (j = 0; j < 4; j++) {
     if (maxvol < maxdb[j]) {
       maxvol = maxdb[j];
@@ -142,27 +146,68 @@ void Cansat::sound_read() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
- // 地磁気センサ＋マイクのアルゴリズム
+// 地磁気センサ＋マイクのアルゴリズム
+
 void Cansat::guidance3() {
-  
-  sound_read();
-  
-  if (maxvol < 5) {
-    // sound_read()で音が取れてないときの例外処理
+
+  sound_read();//ここで音の高さと音の大きさがわかる
+
+  if (maxvol > SOUND_VOLUME) {
+
+    // 東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
+
+    if (maxfreq == 36) {        //2500Hz
+      //北へ
+    } else if (maxfreq == 37) { //2570Hz
+      //北東へ
+    } else if (maxfreq == 38) { //2640Hz
+      //東へ
+    } else if (maxfreq == 39) { //2710Hz
+      //南東へ
+    } else if (maxfreq == 40) { //2780Hz
+      //南へ
+    } else if (maxfreq == 41) { //2850Hz
+      //南西へ
+    } else if (maxfreq == 42) { //2920Hz
+      //西へ
+    } else if (maxfreq == 43) { //2990Hz
+      //北西へ
+    } else {
+      Serial.println("想定していない音を拾っています")
+    }
+  } else {//音が拾えてなかったら
+    rightMotor.stopSlowly();
+    leftMotor.stopSlowly();
   }
-  // この後cansatに東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
- // 地磁気センサなしでの走行アルゴリズム
+// 地磁気センサなしでの走行アルゴリズム
+
 void Cansat::guidance4() {
-  
-  sound_read();
-  
-  if (maxvol < 5) {
-    // sound_read()で音が取れてないときの例外処理
+
+  sound_read(); // ここで音がどっちから飛んできたかが変数direcに入る
+
+  if (maxvol > SOUND_VOLUME) {//音が拾えていたら
+
+    // モーターの挙動
+    if (direc == 1) { //front
+      rightMotor.go(255);
+      leftMotor.go(255);
+    } else if (direc == 2) { //right
+      leftMotor.go(255);
+    } else if (direc == 3) { //left
+      rightMotor.go(255);
+    } else if (direc == 4) { //back
+      rightMotor.back(255);
+      leftMotor.go(255);
+    } else {
+      Serial.println("なんかバグってます(guidance4)")//通常動作でdirecは1,2,3,4のどれかになる予定
+    }
+  } else { //音が拾えてなかったら
+    rightMotor.stopSlowly();
+    leftMotor.stopSlowly();
   }
-  // この後cansatに東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
 }
 
 
