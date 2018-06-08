@@ -5,13 +5,32 @@
 */
 #include "cansat.h"
 
+void Cansat::setup() {
+  sd.setupSd;
+  radio.setupRadio();
+  mic.setupMic();
+  gps.setupGps();
+  acc.setupAcc();
+  compass.setupCompass();
+}
+
+void Cansat::test() {
+  light.readLight();
+  acc.readAcc();
+  compass.readCompss();
+  gps.readGps();
+  mic.readMic();
+  writeSd();
+  sendXbee();
+}
+
 
 void Cansat::guidance1(float nowLat, float nowLon, float nowDeg, float goalLat, float goalLon) {
   // Lon=経度=x
   // Lat=緯度=y
-  // メートル変換するよ，地球の球体を考慮した座標値変換する必要あり
-  float deltaLon = (goalLon - nowLon) * 100000;
-  float deltaLat = (goalLat - nowLat) * 100000;
+  // 地球の球体を考慮した座標値変換する必要あり
+  float deltaLon = (goalLon - nowLon) ;
+  float deltaLat = (goalLat - nowLat);
   float distance = sqrt(pow(deltaLat, 2) + pow(deltaLon, 2));
   // 機体座標に変換，回転行列使うよ，deg2radするよ
   float bodyLon = deltaLon * cos(nowDeg / 180 * M_PI) + deltaLat * sin(nowDeg / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
@@ -142,11 +161,11 @@ void Cansat::sound_read() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
- // 地磁気センサ＋マイクのアルゴリズム
+// 地磁気センサ＋マイクのアルゴリズム
 void Cansat::guidance3() {
-  
+
   sound_read();
-  
+
   if (maxvol < 5) {
     // sound_read()で音が取れてないときの例外処理
   }
@@ -154,11 +173,11 @@ void Cansat::guidance3() {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
- // 地磁気センサなしでの走行アルゴリズム
+// 地磁気センサなしでの走行アルゴリズム
 void Cansat::guidance4() {
-  
+
   sound_read();
-  
+
   if (maxvol < 5) {
     // sound_read()で音が取れてないときの例外処理
   }
@@ -166,6 +185,32 @@ void Cansat::guidance4() {
 }
 
 
+// state, millis, light, lat, lon, ax, ay, az, deg, mic...
+void Cansat::writeSd() {
+  String log_data = String(millis()) + ", "
+                    + String(state) + ", "
+                    + String(gps.lat) + ", "
+                    + String(gps.lon) + ", "
+                    + String(acc.ax) + ", "
+                    + String(acc.ay) + ", "
+                    + String(acc.az) + ", "
+                    + String(compass.deg) + ","
+                    + String(mike) + ", ";
+  sd.printSd(log_data);
+}
+
+void Cansat::sendXbee() {
+  String send_data = String(millis()) + ", "
+                     + String(state) + ", "
+                     + String(gps.lat) + ", "
+                     + String(gps.lon) + ", "
+                     + String(acc.ax) + ", "
+                     + String(acc.ay) + ", "
+                     + String(acc.az) + ", "
+                     + String(compass.deg) + ","
+                     + String(mike) + ", ";
+  radio.sendData(send_data);
+}
 
 
 

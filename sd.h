@@ -16,12 +16,7 @@ class Sd {
   Sd();
   ~Sd();
   void setupSd();  // setup
-  void printSd(String _dataIn);  // log保存
-  
-  // 変数
-  String dataSet;
-  String dataIn;
-  String allData;
+  void printSd(String log_data);  // log保存
   };
 
   #endif

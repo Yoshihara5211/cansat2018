@@ -11,6 +11,7 @@
 
 class Motor {
 public:
+// 関数
   Motor(int pinMotorFin, int pinMotorRin);  // モータドライバのFIN,RIN番号
   ~Motor();
   void go(int v);  // 前進，vは0~255で0~5v
@@ -18,10 +19,8 @@ public:
   void stop();  //ストップ(電圧止める)
   void stopSlowly();  //徐々に減速してストップ(徐々に電圧弱める)
   void brake();  //ブレーキ(電圧かけてモーター固定)
-
+// 変数
   int velocity;  // 前進中の速度
-  int _pinMotorFin;
-  int _pinMotorRin;
 };
 
 #endif

@@ -6,7 +6,7 @@
 #include "light.h"
 
 Light::Light(int lightPin) {
-  _lightPin = lightPin;
+  int _lightPin = lightPin;
   pinMode(_lightPin, INPUT);
 }
 

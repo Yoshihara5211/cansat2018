@@ -6,8 +6,8 @@
 #include "motor.h"
 
 Motor::Motor(int pinMotorFin, int pinMotorRin) {
-  _pinMotorFin = pinMotorFin;
-  _pinMotorRin = pinMotorRin;
+  int _pinMotorFin = pinMotorFin;
+  int _pinMotorRin = pinMotorRin;
   pinMode(_pinMotorFin, OUTPUT);
   pinMode(_pinMotorRin, OUTPUT);
   digitalWrite(_pinMotorFin, LOW);

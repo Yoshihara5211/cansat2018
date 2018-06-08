@@ -16,14 +16,11 @@ void Gps::setupGps() {
   while (SerialGps.available() > 0) {
     char c = SerialGps.read();
     tinygps.encode(c);
+    Serial.println(c);
     if (tinygps.date.isValid()) {
       year = tinygps.date.year();
       month = tinygps.date.month();
       day = tinygps.date.day();
-      String data1 = "year, month, day, hour, minute, second";
-      String data2 = "lon, lat, alt, baudrate, deg";
-      Serial.println(data1);
-      Serial.println(data2);
     }
   }
 }
@@ -33,10 +30,14 @@ void Gps::readGps() {
   while (SerialGps.available()) {
     char c = SerialGps.read();
     tinygps.encode(c);
-
+    Serial.println(c);
+    
     if (tinygps.location.isValid()) {
       lon = tinygps.location.lng();
+      lon = lon*100000;
       lat = tinygps.location.lat();
+      lat = lat*100000;
+      alt = tinygps.altitude.meters();
     }
 
     if (tinygps.time.isValid()) {
@@ -52,21 +53,8 @@ void Gps::readGps() {
     if (tinygps.course.isValid()) {
       deg = tinygps.course.deg();
     }
-    alt = tinygps.altitude.meters();
-   
-    gpsDate = String(year) + ", "
-              + String(month) + ", "
-              + String(day) + "，"
-              + String(hour) + "，"
-              + String(minute) + "，"
-              + String(second) + "，"
-              + String(lat) + ", "
-              + String(alt) + "，"
-              + String(baudrate) + "，"
-              + String(deg) + "，"
-              + String(alt) + "，";
-    Serial.println(gpsDate);
   }
+  
   if (millis() > 5000 && tinygps.charsProcessed() < 10)
-    Serial.println(F("No GPS data received: check wiring"));
+    Serial.println("No GPS data received: check wiring");
 }

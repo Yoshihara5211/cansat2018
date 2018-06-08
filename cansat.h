@@ -16,7 +16,7 @@
 #include "radio.h"
 #include "acc.h"
 #include "compass.h"
-//#include "mike.h"
+#include "mic.h"
 
 class Cansat {
   public:
@@ -80,7 +80,7 @@ class Cansat {
     /////////////////////////////////////
     //////////////////
     void goal();
-
+void test();
 
     // 変数
 

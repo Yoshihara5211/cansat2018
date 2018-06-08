@@ -22,13 +22,12 @@ class Gps {
     void readGps();  //  GPS情報読み取り
 
     // 変数
-    float lon;   // 経度
-    float lat;   // 緯度
     short year, month, day, hour, minute, second;
+    float lon;   // 経度[m]
+    float lat;   // 緯度[m]
     float baudrate;  // 通信速度
     float deg;  // ??? 
     float alt;  // 高度(割と雑)
-    String gpsDate;  // 変数まとめ
 };
 
 #endif

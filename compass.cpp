@@ -43,7 +43,7 @@ void Compass::readCompass() {
   Y_DOUBLE = Y_12;                       //CONVERT TO DOUBLE (FOR atan2)
   //
   RAD_RESULT = atan2(Y_DOUBLE, X_DOUBLE); //GET RADIAN
-  DEG_RESULT = RAD_RESULT * 180 / 3.142; //GET DEGREE
+  deg = RAD_RESULT * 180 / 3.142; //GET DEGREE
   /////////////////////////////////////////////////////
 
   

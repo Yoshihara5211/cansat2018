@@ -30,6 +30,6 @@ class Compass {
     double X_DOUBLE;
     double Y_DOUBLE;
     double RAD_RESULT;
-    double DEG_RESULT;
+    double deg;
 };
 #endif

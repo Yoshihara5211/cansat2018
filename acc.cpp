@@ -36,7 +36,7 @@ void Acc::readAcc(){
   x=(float)x1/25-xcal;
   y=(float)y1/25-ycal;
   z=(float)z1/25-zcal;
-  X=100*x/110;
-  Y=100*y/111;
-  Z=z;
+  ax=100*x/110;
+  ay=100*y/111;
+  az=z;
 }
