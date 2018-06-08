@@ -23,6 +23,7 @@ void Radio::getData() {
 }
 
 void Radio::sendData(String radio_data) {
+  SerialRadio.begin(9600);
   String _radio_data = radio_data;
   SerialRadio.println(_radio_data);
 }

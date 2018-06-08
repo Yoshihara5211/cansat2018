@@ -1,9 +1,9 @@
 /**
- @file cansat2018.ino
- @brief CanSat Project 2018
- @author Hiroyuki Yoshihara
- @date Created: 20180413
- */
+  @file cansat2018.ino
+  @brief CanSat Project 2018
+  @author Hiroyuki Yoshihara
+  @date Created: 20180413
+*/
 
 #include <stdio.h>
 #include <string.h>
@@ -11,15 +11,17 @@
 #include "constant.h" //全ての定数はここ
 #include "cansat.h"
 
-Cansa cansat;
+Cansat cansat;
 
 
 void setup() {
-cansat.setup();
+  cansat.setup();
 }
 
 void loop() {
-cansat.sequence();
-cansat.writeSd();
-cansat.sendXbee();
+//  cansat.sequence();
+//  cansat.writeSd();
+//  cansat.sendXbee();
+cansat.test();
+delay(500);
 }

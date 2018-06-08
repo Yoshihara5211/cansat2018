@@ -5,8 +5,8 @@
 #include "Arduino.h"
 #include <Wire.h>
 #include <math.h>
-
 #define HMC5883L_ADR 0x1E //7bit ADDRESS
+
 
 class Compass {
   public:

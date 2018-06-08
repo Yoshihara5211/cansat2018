@@ -26,6 +26,7 @@
 
 #define BEAT 100   // 音の長さを指定
 
+
 //シークエンス
 #define PREPARING 0   // 電源オン
 #define FLYING 1  // 格納検知

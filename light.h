@@ -17,6 +17,7 @@ class Light {
   void readLight();  // アナログ読み取り
 
   // 変数  
+  int _lightPin;
   int lightValue;  // アナログ値(0 ~ 1023)
 };
 

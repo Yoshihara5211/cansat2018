@@ -6,6 +6,7 @@ Compass::~Compass() {
 }
 
 void Compass::setupCompass(unsigned char REG_ADR, unsigned char DATA) {
+  Wire.begin();
   Wire.beginTransmission(HMC5883L_ADR);
   Wire.write(REG_ADR);
   Wire.write(DATA);
@@ -21,6 +22,8 @@ unsigned char Compass::I2C_READ(unsigned char REG_ADR) {
 }
 
 void Compass::readCompass() {
+  Wire.end();
+  Wire.begin();
   // delay(250);                            //WAIT DATA SET TIME
   X_MSB = I2C_READ(0x03);
   X_LSB = I2C_READ(0x04);

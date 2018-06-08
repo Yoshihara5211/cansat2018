@@ -20,6 +20,8 @@ public:
   void stopSlowly();  //徐々に減速してストップ(徐々に電圧弱める)
   void brake();  //ブレーキ(電圧かけてモーター固定)
 // 変数
+int _pinMotorFin;
+int _pinMotorRin;
   int velocity;  // 前進中の速度
 };
 
