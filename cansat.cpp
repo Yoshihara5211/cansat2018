@@ -91,56 +91,35 @@ void Cansat::guidance2(float nowLat, float nowLon, float goalLat, float goalLon)
 
 
 void Cansat::sound_read() {
+  // FFT→結果はmic.data[]に格納
   mic1.FFT();
   mic2.FFT();
   mic3.FFT();
   mic4.FFT();
+  mic1.soundRead();
+  mic2.soundRead();
+  mic3.soundRead();
+  mic4.soundRead();
+  
 
-  int maxdb[4] = {0, 0, 0, 0}; // 各マイクが拾った音の大きさ
-  int freq[4] = {0, 0, 0, 0}; //各マイクが拾った音の高さ
-  int i, j; // for文用
-
-  // 2kHz未満の音絶対拾わない
-  for (i = 32; i < 64; i++) {
-
-    // なぜかdataがchar型なのでここでint型に変換
-    sprintf(mic1.buf, "%5d", mic1.data[i]);
-    sprintf(mic2.buf, "%5d", mic2.data[i]);
-    sprintf(mic3.buf, "%5d", mic3.data[i]);
-    sprintf(mic4.buf, "%5d", mic4.data[i]);
-    int i1 = atoi(mic1.buf);
-    int i2 = atoi(mic2.buf);
-    int i3 = atoi(mic3.buf);
-    int i4 = atoi(mic4.buf);
-    //変換完了
-
-    //maxdb[0],i1,freq[0]はマイク1の担当
-    if (maxdb[0] < i1) {
-      maxdb[0] = i1;
-      freq[0] = i;
-    }
-    if (maxdb[1] < i2) {
-      maxdb[1] = i2;
-      freq[1] = i;
-    }
-    if (maxdb[2] < i3) {
-      maxdb[2] = i3;
-      freq[2] = i;
-    }
-    if (maxdb[3] < i4) {
-      maxdb[3] = i4;
-      freq[3] = i;
-    }
-  }
-  //4つのマイクが拾った音の中で、最も大きいもの
+  int vol[4] = {mic1.maxvol, mic2.maxvol, mic3.maxvol, mic4.maxvol}; // 各マイクが拾った音の大きさ
+  int freq[4] = {mic1.maxfreq, mic2.maxfreq, mic3.maxfreq, mic4.maxfreq}; //各マイクが拾った音の高さ
+  int j; // for文用
+  
   //maxvol→大きさ、maxfreq→高さ、direc→どっちから音が来てるか
   maxvol = 0, maxfreq = 0, direc = 0;
   for (j = 0; j < 4; j++) {
-    if (maxvol < maxdb[j]) {
-      maxvol = maxdb[j];
+    if (maxvol < vol[j]) {
+      maxvol = vol[j];
       maxfreq = freq[j];
       direc = j + 1;
     }
+  }
+  //音の大きさがある値より小さいときは0とする
+  if (maxvol < 3) {
+    maxvol = 0;
+    maxfreq = 0;
+    direc = 0;
   }
 }
 

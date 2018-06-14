@@ -63,10 +63,9 @@ class Cansat {
     void guidance2(float nowLat, float nowLon, float goalLat, float goalLon);  // GPS only　<<<<<---小菅
     // void guidance3();  // <<<<<----富吉
     //////////////////////////////////////
-    // 音の情報を取得する関数
-    void sound_read();
     // 最大音量、最大音周波数、どの向きから音が来てるか(1→2→3→4、前→右→左→後)
     int maxvol, maxfreq, direc;
+    int vol[4],freq[4];
     // 地磁気センサ＋マイクのアルゴリズム
     void guidance3();
     // 地磁気センサなしでの走行アルゴリズム
