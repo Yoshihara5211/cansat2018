@@ -28,6 +28,10 @@ class Cansat {
     Motor rightMotor = Motor(RIGHT_MOTOR_FIN_PIN, RIGHT_MOTOR_RIN_PIN);
     Light light = Light(LIGHT_PIN);
     Acc acc = Acc(ACC_X_PIN, ACC_Y_PIN, ACC_Z_PIN);
+    MIC micf = MIC(MIC_FRONT_PIN);
+    MIC micr = MIC(MIC_RIGHT_PIN);
+    MIC micl = MIC(MIC_LEFT_PIN);
+    MIC micb = MIC(MIC_BACK_PIN);
 
     // シリアル通信
     Radio radio;

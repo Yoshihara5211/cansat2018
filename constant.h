@@ -19,10 +19,10 @@
 #define ACC_Y_PIN A1
 #define ACC_Z_PIN A2
 #define LIGHT_PIN A3
-#define MIC_FRONT_PIN A4
-#define MIC_RIGHT_PIN A5
-#define MIC_LEFT_PIN A6 
-#define MIC_BACK_PIN A7
+#define MIC_FRONT_PIN A8
+#define MIC_RIGHT_PIN A9
+#define MIC_LEFT_PIN A10 
+#define MIC_BACK_PIN A11
 
 #define BEAT 100   // 音の長さを指定
 

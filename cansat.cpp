@@ -12,8 +12,8 @@ Cansat::Cansat() {
   pinMode(BUZZER_PIN, OUTPUT);
 }
 
-Cansat::~Cansat(){
-  }
+Cansat::~Cansat() {
+}
 
 void Cansat::setup() {
   Serial.begin(9600);
@@ -31,14 +31,23 @@ void Cansat::setup() {
 
 void Cansat::test() {
   Serial.println("---------------------------------------------------------------");
+  micf.FFT();
+  micr.FFT();
+  micl.FFT();
+  micb.FFT();
+  micf.soundRead();
+  micr.soundRead();
+  micl.soundRead();
+  micb.soundRead();
+  Serial.println("Mic.ok");
   light.readLight();
   Serial.println("Light.ok");
   acc.readAcc();
-   Serial.println("Acc.ok");
+  Serial.println("Acc.ok");
   compass.readCompass();
-   Serial.println("Compass.ok");
+  Serial.println("Compass.ok");
   gps.readGps();
-   Serial.println("Gps.ok");
+  Serial.println("Gps.ok");
   writeSd();
   Serial.println("log_ok");
   sendXbee();
@@ -222,7 +231,15 @@ void Cansat::writeSd() {
                     + String(acc.ax) + ", "
                     + String(acc.ay) + ", "
                     + String(acc.az) + ", "
-                    + String(compass.deg) + ",";
+                    + String(compass.deg) + ", "
+                    + String(micf.maxfreq) + ", "
+                    + String(micf.maxvol) + ", "
+                    + String(micr.maxfreq) + ", "
+                    + String(micr.maxvol) + ", "
+                    + String(micl.maxfreq) + ", "
+                    + String(micl.maxvol) + ", "
+                    + String(micb.maxfreq) + ", "
+                    + String(micb.maxvol);
   sd.printSd(log_data);
 }
 
@@ -236,6 +253,14 @@ void Cansat::sendXbee() {
                      + String(acc.ay) + ","
                      + String(acc.az) + ","
                      + String(compass.deg) + ","
+                     + String(micf.maxfreq) + ","
+                     + String(micf.maxvol) + ","
+                     + String(micr.maxfreq) + ","
+                     + String(micr.maxvol) + ","
+                     + String(micl.maxfreq) + ","
+                     + String(micl.maxvol) + ","
+                     + String(micb.maxfreq) + ","
+                     + String(micb.maxvol) + ","
                      + "e";
   radio.sendData(send_data);
 }
