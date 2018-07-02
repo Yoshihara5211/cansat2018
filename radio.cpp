@@ -11,9 +11,9 @@ Radio::~Radio() {
 }
 
 void Radio::setupRadio() {
-  SerialRadio.begin(9600);
+  Serial2.begin(9600);
   String radio_name = "state, millis, light, lat, lon, ax, ay, az, deg, mic... ";
-  SerialRadio.println(radio_name);
+  Serial2.println(radio_name);
 }
 
 void Radio::getData() {
@@ -23,9 +23,14 @@ void Radio::getData() {
 }
 
 void Radio::sendData(String radio_data) {
+  SerialRadio.end();
   SerialRadio.begin(9600);
   String _radio_data = radio_data;
-  SerialRadio.println(_radio_data);
+  Serial2.println(_radio_data);
+  Serial.println(_radio_data);
 }
+
+
+
 
 

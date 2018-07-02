@@ -25,10 +25,12 @@ void Cansat::setup() {
   acc.setupAcc();
   Serial.println("Acc.ok");
   compass.setupCompass(0x02, 0x00);
+  compass.calibration();
   Serial.println("Compass.ok");
 }
 
 void Cansat::test() {
+  Serial.println("---------------------------------------------------------------");
   light.readLight();
   Serial.println("Light.ok");
   acc.readAcc();
@@ -225,15 +227,16 @@ void Cansat::writeSd() {
 }
 
 void Cansat::sendXbee() {
-  String send_data = String(millis()) + ", "
-                     + String(state) + ", "
-                     + String(light.lightValue) + ", "
-                     + String(gps.lat) + ", "
-                     + String(gps.lon) + ", "
-                     + String(acc.ax) + ", "
-                     + String(acc.ay) + ", "
-                     + String(acc.az) + ", "
-                     + String(compass.deg) + ",";
+  String send_data = String(millis()) + ","
+                     + String(state) + ","
+                     + String(light.lightValue) + ","
+                     + String(gps.lat) + ","
+                     + String(gps.lon) + ","
+                     + String(acc.ax) + ","
+                     + String(acc.ay) + ","
+                     + String(acc.az) + ","
+                     + String(compass.deg) + ","
+                     + "e";
   radio.sendData(send_data);
 }
 

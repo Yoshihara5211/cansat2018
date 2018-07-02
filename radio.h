@@ -16,6 +16,7 @@ class Radio {
     // 関数
     Radio();
     ~Radio();
+    XBee xbee = XBee();
     HardwareSerial SerialRadio = Serial2;  // Serial2を使う
     void setupRadio();  // setup
     void getData();  // 地上局からステートが送られてきたら受け取る

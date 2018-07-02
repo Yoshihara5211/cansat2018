@@ -23,5 +23,5 @@ void loop() {
 //  cansat.writeSd();
 //  cansat.sendXbee();
 cansat.test();
-delay(500);
+delay(200);
 }

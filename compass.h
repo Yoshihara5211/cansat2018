@@ -1,4 +1,4 @@
-  #ifndef _COMPASS_H_
+#ifndef _COMPASS_H_
 #define _COMPASS_H_
 #include <stdio.h>
 #include <string.h>
@@ -14,8 +14,9 @@ class Compass {
     Compass();
     ~Compass();
     void setupCompass(unsigned char REG_ADR, unsigned char DATA);
-    void calibration()
+    void calibration();
     unsigned char I2C_READ(unsigned char REG_ADR);
+    void I2C_WRITE(unsigned char REG_ADR, unsigned char DATA);
     void readCompass();
     
     // 変数
@@ -30,17 +31,20 @@ class Compass {
     int Y_12;
     double X_DOUBLE;
     double Y_DOUBLE;
+    double Z_DOUBLE;
     double RAD_RESULT;
     double deg;
-    int x
-    int y
-    int z
-    int x_max
-    int y_max
-    int x_min
-    int y_min
-    double x_cal
-    double y_cal
-    double z_cal
+    int x;
+    int y;
+    int z;
+    int x_max;
+    int y_max;
+    int x_min;
+    int y_min;
+    int z_max;
+    int z_min;
+    double x_cal;
+    double y_cal;
+    double z_cal;
 };
 #endif

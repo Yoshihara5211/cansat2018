@@ -12,15 +12,16 @@ void Compass::setupCompass(unsigned char REG_ADR, unsigned char DATA) {
   Wire.write(DATA);
   Wire.endTransmission(false);
 }
+
 void Compass::calibration() {
   x = y = z = 0;
-  x_max = 0;
-  x_min = 0;
-  y_max = 0;
-  y_min = 0;
-  z_max = 0;
-  z_min = 0;
-  for (int i = 0; i < 100; i++) {
+  x_max = -20000000;
+  x_min = 20000000;
+  y_max = -200000;
+  y_min = 20000;
+  z_max = -20000000;
+  z_min = 20000000;
+  for (int i = 0; i < 300; i++) {
     Wire.end();
     Wire.begin();
     // delay(250);                            //WAIT DATA SET TIME
@@ -37,38 +38,37 @@ void Compass::calibration() {
     Z_12 = ((Z_12 << 8) & 0xFF00) | Z_LSB; //SHIFT & GET 12bit DATA WITH MSB
     Y_12 = Y_MSB;
     Y_12 = ((Y_12 << 8) & 0xFF00) | Y_LSB; //SHIFT & GET 12bit DATA WITH MSB
-
-    int x_tmp = X_12 ;
-    int y_tmp = Y_12;
-    int z_tmp = Z_12;
+    double x_tmp = X_12;
+    double y_tmp = Y_12;
+    double z_tmp = Z_12;
+    
     if (x_tmp > x_max) {
       x_max = x_tmp;
     }
-    if else(x_tmp < x_min) {
-        x_min = x_tmp;
-      }
-
-    x_cal = ((double)x_max + (double)x_min) / 2;
-
-    if (y_tmp > y_max) {
-      y_max = y_tmp
+    else if (x_tmp < x_min) {
+      x_min = x_tmp;
     }
-    if else(y_tmp < y_min) {
-        y_min = y_tmp;
-      }
-
-    y_cal = ((double)y_max + (double)y_min) / 2;
+    if (y_tmp > y_max) {
+      y_max = y_tmp;
+    }
+    else if (y_tmp < y_min) {
+      y_min = y_tmp;
+    }
 
     if (z_tmp > z_max) {
-      z_max = z_tmp
+      z_max = z_tmp;
     }
-    if else(z_tmp < z_min) {
-        z_min = z_tmp;
-      }
-
-    z_cal = ((double)z_max + (double)z_min) / 2;
+    else if (z_tmp < z_min) {
+      z_min = z_tmp;
+    }
   }
+  x_cal = ((double)x_max + (double)x_min) / 2;
+  y_cal = ((double)y_max + (double)y_min) / 2;
+  z_cal = ((double)z_max + (double)z_min) / 2;
 
+//  Serial.print(x_cal);
+ // Serial.print(y_cal);
+// Serial.println(z_cal);
 }
 
 
@@ -78,6 +78,14 @@ unsigned char Compass::I2C_READ(unsigned char REG_ADR) {
   Wire.endTransmission(false);  // スレーブデバイスに対する送信を完了，falseに設定するとrestartメッセージをリクエストのあと送信しコネクションを維持
   Wire.requestFrom(HMC5883L_ADR, 1);  // デバイス(アドレスHMC5883L_ADR)に対し1バイトを要求
   return  Wire.read();  // マスタデバイスでは、requestFrom()を実行したあと、スレーブから送られてきたデータを読み取るときに使用
+}
+
+void Compass::I2C_WRITE(unsigned char REG_ADR, unsigned char DATA)
+{
+  Wire.beginTransmission(HMC5883L_ADR);
+  Wire.write(REG_ADR);
+  Wire.write(DATA);
+  Wire.endTransmission(false);
 }
 
 void Compass::readCompass() {
@@ -105,6 +113,7 @@ void Compass::readCompass() {
   Y_DOUBLE = Y_12 - y_cal;                     //CONVERT TO DOUBLE (FOR atan2)
   Z_DOUBLE = Z_12 - z_cal;
   //
+
   RAD_RESULT = atan2(Y_DOUBLE, X_DOUBLE); //GET RADIAN
   deg = RAD_RESULT * 180 / 3.142; //GET DEGREE
   /////////////////////////////////////////////////////
