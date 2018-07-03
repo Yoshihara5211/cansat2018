@@ -24,8 +24,8 @@ class Cansat {
   ~Cansat();
     // オブジェクト生成
     // ピン指定
-    Motor leftMotor = Motor(LEFT_MOTOR_FIN_PIN, LEFT_MOTOR_RIN_PIN);
-    Motor rightMotor = Motor(RIGHT_MOTOR_FIN_PIN, RIGHT_MOTOR_RIN_PIN);
+Motor leftMotor = Motor(LEFT_MOTOR_VREF_PIN, LEFT_MOTOR_IN1_PIN, LEFT_MOTOR_IN2_PIN);
+Motor rightMotor = Motor(RIGHT_MOTOR_VREF_PIN, RIGHT_MOTOR_IN1_PIN, RIGHT_MOTOR_IN2_PIN);
     Light light = Light(LIGHT_PIN);
     Acc acc = Acc(ACC_X_PIN, ACC_Y_PIN, ACC_Z_PIN);
     MIC micf = MIC(MIC_FRONT_PIN);

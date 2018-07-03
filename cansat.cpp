@@ -19,14 +19,14 @@ void Cansat::setup() {
   Serial.begin(9600);
   sd.setupSd();
   radio.setupRadio();
-  Serial.println("Xbee.ok");
+  Serial.println("Xbee is ok");
   gps.setupGps();
-  Serial.println("Gps.ok");
+  Serial.println("Gps is ok");
   acc.setupAcc();
-  Serial.println("Acc.ok");
+  Serial.println("Acc is ok");
   compass.setupCompass(0x02, 0x00);
   compass.calibration();
-  Serial.println("Compass.ok");
+  Serial.println("Compass is ok");
 }
 
 void Cansat::test() {
@@ -39,15 +39,15 @@ void Cansat::test() {
   micr.soundRead();
   micl.soundRead();
   micb.soundRead();
-  Serial.println("Mic.ok");
+  Serial.println("Mic is ok");
   light.readLight();
-  Serial.println("Light.ok");
+  Serial.println("Light is ok");
   acc.readAcc();
-  Serial.println("Acc.ok");
+  Serial.println("Acc is ok");
   compass.readCompass();
-  Serial.println("Compass.ok");
+  Serial.println("Compass is ok");
   gps.readGps();
-  Serial.println("Gps.ok");
+  Serial.println("Gps is ok");
   writeSd();
   Serial.println("log_ok");
   sendXbee();
