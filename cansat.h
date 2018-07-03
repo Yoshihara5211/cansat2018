@@ -66,8 +66,10 @@ class Cansat {
 //    //////////////////////////////////////
 //    // 音の情報を取得する関数
 //    void sound_read();
-//    // 最大音量、最大音周波数、どの向きから音が来てるか(1→2→3→4、前→右→後→左)
-//    int maxvol,maxfreq,direc;
+//    // sound_readに必要な変数
+//    int vol[4],freq[4],number[4];
+//    // 最大音量、最大音周波数、どのマイクが一番大きな音を拾ったか、どの向きから音が来てるか
+//    int maxvol,maxfreq,maxnumber,direc;
 //    // 地磁気センサ＋マイクのアルゴリズム
 //    void guidance3();
 //    // 地磁気センサなしでの走行アルゴリズム
