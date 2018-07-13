@@ -23,7 +23,7 @@ void Acc::setupAcc(){
   }
   xcal=(float)xcal1/100.0;
   ycal=(float)ycal1/100.0;
-  zcal=(float)zcal1/100.0 - 100.0 ;
+  zcal=(float)zcal1/100.0 - 68.5 ;
   }
 
 void Acc::readAcc(){
@@ -36,7 +36,7 @@ void Acc::readAcc(){
   x=(float)x1/25-xcal;
   y=(float)y1/25-ycal;
   z=(float)z1/25-zcal;
-  ax=100*x/110;
-  ay=100*y/111;
-  az=z;
+  ax=9.8*x/68.5;
+  ay=9.8*y/68.5;
+  az=9.8*z/68.5;
 }

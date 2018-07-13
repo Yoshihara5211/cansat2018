@@ -15,10 +15,10 @@ class Acc {
     // 変数
     int _accxPin, _accyPin, _acczPin;
     unsigned long x1, y1, z1;
-    int x, y, z;
+    float x, y, z;
     unsigned long xcal1, ycal1, zcal1;
     float xcal, ycal, zcal;
-    int ax, ay, az;
+    float ax, ay, az;
 };
 
 #endif
