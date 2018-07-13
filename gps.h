@@ -16,7 +16,7 @@ class Gps {
     // 関数
     Gps();
     ~Gps();
-    HardwareSerial SerialGps = Serial1;
+   HardwareSerial SerialGps = Serial1;
     TinyGPSPlus tinygps;  // ライブラリからオブジェクト生成
     void setupGps();  // setup + date情報
     void readGps();  //  GPS情報読み取り
