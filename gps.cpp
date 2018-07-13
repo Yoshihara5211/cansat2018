@@ -13,7 +13,12 @@ Gps::~Gps() {
 
 void Gps::setupGps() {
   SerialGps.begin(9600);
-  while (SerialGps.available() > 0) {
+
+//  while (SerialGps.available() <= 0) {
+//    Serial.println(F("No GPS data received: check wiring"));
+//  }
+
+  if (SerialGps.available() > 0) {
     char c = SerialGps.read();
     tinygps.encode(c);
     Serial.println(c);
@@ -31,12 +36,12 @@ void Gps::readGps() {
     char c = SerialGps.read();
     tinygps.encode(c);
     Serial.println(c);
-    
+
     if (tinygps.location.isValid()) {
       lon = tinygps.location.lng();
-      lon = lon*100000;
+      lon = lon * 100000;
       lat = tinygps.location.lat();
-      lat = lat*100000;
+      lat = lat * 100000;
       alt = tinygps.altitude.meters();
     }
 
@@ -54,7 +59,7 @@ void Gps::readGps() {
       deg = tinygps.course.deg();
     }
   }
-  
+
   if (millis() > 5000 && tinygps.charsProcessed() < 10)
     Serial.println("No GPS data received: check wiring");
 }

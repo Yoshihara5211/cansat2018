@@ -7,24 +7,24 @@
 #define _CONSTANT_H_
 
 //ピン番号指定  
-#define LEFT_MOTOR_VREF_PIN 15
-#define LEFT_MOTOR_IN1_PIN 46
-#define LEFT_MOTOR_IN2_PIN 44
-#define RIGHT_MOTOR_VREF_PIN 6
-#define RIGHT_MOTOR_IN1_PIN 10
-#define RIGHT_MOTOR_IN2_PIN 9
-#define RED_LED_PIN 10
-#define YELLOW_LED_PIN 11
-#define GREEN_LED_PIN 12
-#define BUZZER_PIN 13
-#define ACC_X_PIN A0
-#define ACC_Y_PIN A1
-#define ACC_Z_PIN A2
+#define LEFT_MOTOR_VREF_PIN 4
+#define LEFT_MOTOR_IN1_PIN 3
+#define LEFT_MOTOR_IN2_PIN 2
+#define RIGHT_MOTOR_VREF_PIN 45
+#define RIGHT_MOTOR_IN1_PIN 44
+#define RIGHT_MOTOR_IN2_PIN 46
+#define RED_LED_PIN A9
+#define YELLOW_LED_PIN A5
+#define GREEN_LED_PIN A4
+#define BUZZER_PIN A15
+#define ACC_X_PIN A8
+#define ACC_Y_PIN A7
+#define ACC_Z_PIN A6
 #define LIGHT_PIN A3
-#define MIC_FRONT_PIN A8
-#define MIC_RIGHT_PIN A9
-#define MIC_LEFT_PIN A10 
-#define MIC_BACK_PIN A11
+#define MIC_FRONT_PIN A0
+#define MIC_RIGHT_PIN A14
+#define MIC_LEFT_PIN A1 
+#define MIC_BACK_PIN A2
 
 #define BEAT 100   // 音の長さを指定
 
