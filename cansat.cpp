@@ -17,17 +17,24 @@ Cansat::~Cansat() {
 
 void Cansat::setup() {
   Serial.begin(9600);
+  
   sd.setupSd();
   Serial.println("Sd is ok");
+  
   radio.setupRadio();
   Serial.println("Radio is ok");
+  
   gps.setupGps();
   Serial.println("Gps is ok");
+  
   digitalWrite(RED_LED_PIN, HIGH);
+  tone(BUZZER_PIN, 131, 1000);
   acc.setupAcc();
   digitalWrite(RED_LED_PIN, LOW);
   Serial.println("Acc is ok");
+  
   digitalWrite(YELLOW_LED_PIN, HIGH);
+  tone(BUZZER_PIN, 523, 1000);
   compass.setupCompass(0x02, 0x00);
   compass.calibration();
   digitalWrite(YELLOW_LED_PIN, LOW);
@@ -45,16 +52,22 @@ void Cansat::test() {
   micl.soundRead();
   micb.soundRead();
   Serial.println("Mic is ok");
+  
   light.readLight();
   Serial.println("Light is ok");
+  
   acc.readAcc();
   Serial.println("Acc is ok");
+  
   compass.readCompass(acc.ax,acc.ay,acc.az);
   Serial.println("Compass is ok");
+  
   gps.readGps();
   Serial.println("Gps is ok");
+  
   writeSd();
   Serial.println("log is ok");
+  
   if (light.lightValue > 500){
     sendXbee();
       Serial.println("radio is ok");
