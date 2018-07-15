@@ -15,7 +15,7 @@ Acc::~Acc(){
 void Acc::setupAcc(){
   xcal1=ycal1=zcal1=0;
   xcal=ycal=zcal=0.0;
-  float count = 1000;
+  float count = 500;
   for(int i=0;i<count;i++){
   xcal1=xcal1+analogRead(_accxPin);
   ycal1=ycal1+analogRead(_accyPin);

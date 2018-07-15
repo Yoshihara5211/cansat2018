@@ -7,7 +7,8 @@
 
 Cansat::Cansat() {
   pinMode(RED_LED_PIN, OUTPUT);
-  pinMode(YELLOW_LED_PIN, OUTPUT);
+  pinMode(BLUE
+  _LED_PIN, OUTPUT);
   pinMode(GREEN_LED_PIN, OUTPUT);
   pinMode(BUZZER_PIN, OUTPUT);
 }
@@ -35,11 +36,11 @@ void Cansat::setup() {
   digitalWrite(RED_LED_PIN, LOW);
   Serial.println("Acc is ok");
 
-  digitalWrite(YELLOW_LED_PIN, HIGH);
+  digitalWrite(BLUE_LED_PIN, HIGH);
   tone(BUZZER_PIN, 523, 1000);
   compass.setupCompass(0x02, 0x00);
   compass.calibration();
-  digitalWrite(YELLOW_LED_PIN, LOW);
+  digitalWrite(BLUE_LED_PIN, LOW);
   Serial.println("Compass is ok");
 }
 

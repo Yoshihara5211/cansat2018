@@ -14,7 +14,7 @@
 #define RIGHT_MOTOR_IN1_PIN 44
 #define RIGHT_MOTOR_IN2_PIN 46
 #define RED_LED_PIN A9
-#define YELLOW_LED_PIN A5
+#define BLUE_LED_PIN A5
 #define GREEN_LED_PIN A4
 #define BUZZER_PIN A15
 #define ACC_X_PIN A8
