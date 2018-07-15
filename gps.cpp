@@ -12,16 +12,16 @@ Gps::~Gps() {
 }
 
 void Gps::setupGps() {
-  Serial1.begin(9600);
+  Serial3.begin(9600);
 
 //  while (SerialGps.available() <= 0) {
 //    Serial.println(F("No GPS data received: check wiring"));
 //  }
 
-  if (Serial1.available() > 0) {
-    char c = Serial1.read();
+  if (Serial3.available() > 0) {
+    char c = Serial3.read();
     tinygps.encode(c);
-    Serial.println(c);
+//    Serial.println(c);
     if (tinygps.date.isValid()) {
       year = tinygps.date.year();
       month = tinygps.date.month();
@@ -31,11 +31,11 @@ void Gps::setupGps() {
 }
 
 void Gps::readGps() {
-  Serial1.begin(9600);
-  while (Serial1.available()) {
-    char c = Serial1.read();
+  Serial3.begin(9600);
+  while (Serial3.available()) {
+    char c = Serial3.read();
     tinygps.encode(c);
-    // Serial.println(c);
+//     Serial.println(c);
 
     if (tinygps.location.isValid()) {
       lon = tinygps.location.lng();

@@ -41,7 +41,7 @@ void Sd::setupSd() {
 }
 
 void Sd::printSd(String log_data) {
-  File file = SD.open("20180713.txt", FILE_WRITE);
+  File file = SD.open("TEST0714.txt", FILE_WRITE);
   String _log_data = log_data;  // ログ保存データ
   if (file) {                                      //if the file in the SD card was open to wrihte, true or false
     file.println(_log_data);                          // write data into the file,

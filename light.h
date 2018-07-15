@@ -15,6 +15,7 @@ class Light {
   Light(int lightPin);
   ~Light();
   void readLight();  // アナログ読み取り
+  int returnLightValue();
 
   // 変数  
   int _lightPin;

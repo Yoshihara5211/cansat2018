@@ -6,8 +6,10 @@
 #include "light.h"
 
 Light::Light(int lightPin) {
-  int _lightPin = lightPin;
+   _lightPin = lightPin;
   pinMode(_lightPin, INPUT);
+//pinMode(A3, INPUT);
+  lightValue = 0;
 }
 
 Light::~Light() {
@@ -15,4 +17,9 @@ Light::~Light() {
 
 void Light::readLight() {
   lightValue = analogRead(_lightPin);
+//lightValue = analogRead(A3);
+}
+
+int Light::returnLightValue(){
+  return lightValue;
 }

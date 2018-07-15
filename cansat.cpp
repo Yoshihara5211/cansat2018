@@ -42,6 +42,9 @@ void Cansat::test() {
   micb.soundRead();
   Serial.println("Mic is ok");
   light.readLight();
+  if (light.lightValue > 800){
+  digitalWrite(RED_LED_PIN, HIGH);
+  }
   Serial.println("Light is ok");
   acc.readAcc();
   Serial.println("Acc is ok");
@@ -51,8 +54,11 @@ void Cansat::test() {
   Serial.println("Gps is ok");
   writeSd();
   Serial.println("log is ok");
-  sendXbee();
-  Serial.println("radio is ok");
+  if (light.lightValue > 500){
+    sendXbee();
+      Serial.println("radio is ok");
+  digitalWrite(RED_LED_PIN, LOW);
+    }
 }
 
 
@@ -114,9 +120,13 @@ void Cansat::test() {
 //  float Lon1 = nowLon;
 //  float Lat1 = nowLat;
 //  ////モータの駆動
+//t1 =millis();
+//  if(millis()-t1<10000){
 //  rightMotor.go(255);
 //  leftMotor.go(255);
-//  delay(10000);
+//}else{
+//break;
+//}
 //  ////動いた後のGPSの値
 //  float Lon2 = gps.lon
 //               float Lat2 = gps.lat;
