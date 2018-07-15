@@ -45,19 +45,19 @@ Motor rightMotor = Motor(RIGHT_MOTOR_VREF_PIN, RIGHT_MOTOR_IN1_PIN, RIGHT_MOTOR_
 
     // メイン関数
     void setup();  // 各センサ，コンポーネント，シーケンスのsetup(ここでキャリブレーションをしたい)
-//    void sequence();  // シーケンス制御(シーケンス関数を回す)
+    void sequence();  // シーケンス制御(シーケンス関数を回す)
     void writeSd();  // ログ保存
     void sendXbee();  // 無線送信
 
-//    // setup関数
-//    void setGoal();  // ゴール座標設定関数
-//
-//    // sequence関数
-//    void preparing();
-//    void flying();
-//    void dropping();
-//    void landing();
-//    void running();
+    // setup関数
+    void setGoal(int x_goal);  // ゴール座標設定関数
+
+    // sequence関数
+    void preparing();
+    void flying();
+    void dropping();
+    void landing();
+    void running();
 //    ///////////////////
 //    void stucking();
 //    void guidance1(float nowLat, float nowLon, float nowDeg, float goalLat, float goalLon);  // GPS + COMPASS
@@ -87,6 +87,16 @@ void test();
 
     // 変数
 int state = 0;
+
+float destLon;
+float destLat;
+
+unsigned long preparingTime=0;
+  unsigned long flyingTime=0;
+  unsigned long droppingTime=0;
+  unsigned long landingTime=0;
+  unsigned long runningTime=0;
+  unsigned long _startStuckingTime=0;
 };
 
 #endif

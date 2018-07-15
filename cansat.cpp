@@ -16,6 +16,9 @@ Cansat::~Cansat() {
 }
 
 void Cansat::setup() {
+  // ゴール設定
+  destLon = * 100000;
+  destLat = * 100000;
   Serial.begin(9600);
   
   sd.setupSd();
@@ -40,6 +43,7 @@ void Cansat::setup() {
   digitalWrite(YELLOW_LED_PIN, LOW);
   Serial.println("Compass is ok");
 }
+
 
 void Cansat::test() {
   Serial.println("---------------------------------------------------------------");
@@ -75,6 +79,10 @@ void Cansat::test() {
     }
 }
 
+Void Cansat::preparing(){  // State = 0
+    if (_startPreparingTime == 0) {
+    _startPreparingTime = millis();
+  }
 
 //void Cansat::guidance1(float nowLat, float nowLon, float nowDeg, float goalLat, float goalLon) {
 //  // Lon=経度=x
