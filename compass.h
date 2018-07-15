@@ -17,7 +17,7 @@ class Compass {
     void calibration();
     unsigned char I2C_READ(unsigned char REG_ADR);
     void I2C_WRITE(unsigned char REG_ADR, unsigned char DATA);
-    void readCompass();
+    void readCompass(double ax,double ay,double az);
     
     // 変数
     unsigned char X_MSB;
@@ -46,5 +46,7 @@ class Compass {
     double x_cal;
     double y_cal;
     double z_cal;
+    double roll;
+    double pitch;
 };
 #endif

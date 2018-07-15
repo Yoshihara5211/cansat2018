@@ -15,15 +15,16 @@ Acc::~Acc(){
 void Acc::setupAcc(){
   xcal1=ycal1=zcal1=0;
   xcal=ycal=zcal=0.0;
-  for(int i=0;i<100;i++){
+  float count = 1000;
+  for(int i=0;i<count;i++){
   xcal1=xcal1+analogRead(_accxPin);
   ycal1=ycal1+analogRead(_accyPin);
   zcal1=zcal1+analogRead(_acczPin);
   delay(10);
   }
-  xcal=(float)xcal1/100.0;
-  ycal=(float)ycal1/100.0;
-  zcal=(float)zcal1/100.0 - 68.5 ;
+  xcal=(float)xcal1/count;
+  ycal=(float)ycal1/count;
+  zcal=(float)zcal1/count - 68.5 ;
   }
 
 void Acc::readAcc(){

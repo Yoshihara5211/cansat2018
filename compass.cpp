@@ -21,7 +21,7 @@ void Compass::calibration() {
   y_min = 20000;
   z_max = -20000000;
   z_min = 20000000;
-  for (int i = 0; i < 300; i++) {
+  for (int i = 0; i < 3000; i++) {
     Wire.end();
     Wire.begin();
     // delay(250);                            //WAIT DATA SET TIME
@@ -88,7 +88,7 @@ void Compass::I2C_WRITE(unsigned char REG_ADR, unsigned char DATA)
   Wire.endTransmission(false);
 }
 
-void Compass::readCompass() {
+void Compass::readCompass(double ax,double ay,double az) {
   Wire.end();
   Wire.begin();
   // delay(250);                            //WAIT DATA SET TIME
@@ -114,11 +114,15 @@ void Compass::readCompass() {
   Z_DOUBLE = Z_12 - z_cal;
   //
 
-  RAD_RESULT = atan2(Y_DOUBLE, X_DOUBLE); //GET RADIAN
+
+  roll=atan2(ay,az);
+  pitch=atan2(ax,ay*sin(roll)+az*cos(roll));
+  
+//RAD_RESULT = atan2(Y_DOUBLE, X_DOUBLE); //GET RADIAN
+RAD_RESULT = atan2(Z_DOUBLE*sin(roll)-Y_DOUBLE*cos(roll),X_DOUBLE*cos(pitch)+Y_DOUBLE*sin(pitch)*sin(roll)+Z_DOUBLE*sin(pitch)*cos(roll)); //GET RADIAN
   deg = RAD_RESULT * 180 / 3.142; //GET DEGREE
   /////////////////////////////////////////////////////
 
 
 
 }
-
