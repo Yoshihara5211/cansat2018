@@ -39,7 +39,7 @@
 #define STUCKING 6  // スタック検知
 
 //閾値
-#define ANGLE_THRE 1
+#define ANGLE_THRE 20
 
 
 

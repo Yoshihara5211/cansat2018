@@ -16,26 +16,25 @@ Cansat::~Cansat() {
 }
 
 void Cansat::setup() {
-  // ゴール設定
-  destLon = * 100000;
-  destLat = * 100000;
-  Serial.begin(9600);
+  setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
   
+  Serial.begin(9600);
+
   sd.setupSd();
   Serial.println("Sd is ok");
-  
+
   radio.setupRadio();
   Serial.println("Radio is ok");
-  
+
   gps.setupGps();
   Serial.println("Gps is ok");
-  
+
   digitalWrite(RED_LED_PIN, HIGH);
   tone(BUZZER_PIN, 131, 1000);
   acc.setupAcc();
   digitalWrite(RED_LED_PIN, LOW);
   Serial.println("Acc is ok");
-  
+
   digitalWrite(YELLOW_LED_PIN, HIGH);
   tone(BUZZER_PIN, 523, 1000);
   compass.setupCompass(0x02, 0x00);
@@ -43,7 +42,6 @@ void Cansat::setup() {
   digitalWrite(YELLOW_LED_PIN, LOW);
   Serial.println("Compass is ok");
 }
-
 
 void Cansat::test() {
   Serial.println("---------------------------------------------------------------");
@@ -56,79 +54,85 @@ void Cansat::test() {
   micl.soundRead();
   micb.soundRead();
   Serial.println("Mic is ok");
-  
+
   light.readLight();
   Serial.println("Light is ok");
-  
+
   acc.readAcc();
   Serial.println("Acc is ok");
-  
-  compass.readCompass(acc.ax,acc.ay,acc.az);
+
+  compass.readCompass(acc.ax, acc.ay, acc.az);
   Serial.println("Compass is ok");
-  
+
   gps.readGps();
   Serial.println("Gps is ok");
-  
+
   writeSd();
   Serial.println("log is ok");
-  
-  if (light.lightValue > 500){
-    sendXbee();
-      Serial.println("radio is ok");
-  digitalWrite(RED_LED_PIN, LOW);
-    }
+
+  sendXbee();
+  Serial.println("radio is ok");
+
+  guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
 }
 
-Void Cansat::preparing(){  // State = 0
-    if (_startPreparingTime == 0) {
-    _startPreparingTime = millis();
+void Cansat::setGoal(float lon, float lat){
+  destLon = lon * 100000;
+  destLat = lat * 100000;
   }
 
-//void Cansat::guidance1(float nowLat, float nowLon, float nowDeg, float goalLat, float goalLon) {
-//  // Lon=経度=x
-//  // Lat=緯度=y
-//  // 地球の球体を考慮した座標値変換する必要あり
-//  float deltaLon = (goalLon - nowLon) ;
-//  float deltaLat = (goalLat - nowLat);
-//  float distance = sqrt(pow(deltaLat, 2) + pow(deltaLon, 2));
-//  // 機体座標に変換，回転行列使うよ，deg2radするよ
-//  float bodyLon = deltaLon * cos(nowDeg / 180 * M_PI) + deltaLat * sin(nowDeg / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
-//  float bodyLat = deltaLon * sin(nowDeg / 180 * M_PI) + deltaLat * cos(nowDeg / 180 * M_PI); // [y']   [-sin(th)    cos(th)] [y]
-//
-//  // 機体座標系でのゴールまでの角度を計算
-//  if (bodyLat > 0) {
-//    float bodyAngle = fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
-//  } else if (bodyLat < 0) {
-//    float bodyAngle = 180 - fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
-//  } else
-//    float  bodyAngle = 90;
-//}
-//
-//// ある角度以内なら真っ直ぐ，それ以外で右は右，左は左．
-//if (bodyAngle < ANGLE_THRE) {
-//  int direct = 0; //真っ直ぐ
-//} else {
-//  if (bodyLon >= 0) {
-//    int direct = 1; //右
-//  } else {
-//    int direct = -1; //左
-//  }
-//}
-//
-//// モータの駆動
-//if (_direct == 0) {
-//  rightMotor.go(255);
-//  leftMotor.go(255);
-//} else if (_direct == 1) { //右
-//  rightMotor.go(255 * (1 - _bodyAngle / 180));
-//  leftMotor.go(255);
-//} else if (_direct == -1) { //左
-//  rightMotor.go(255);
-//  leftMotor.go(170 * (1 - _bodyAngle / 180));
-//}
-//}
-//
-//
+void Cansat::preparing() { // State = 0
+  if (preparingTime == 0) {
+    preparingTime = millis();
+  }
+}
+
+void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat) {
+  // Lon=経度=x
+  // Lat=緯度=y
+  // 地球の球体を考慮した座標値変換する必要あり
+   deltaLon = (goalLon - nowLon) ;
+   deltaLat = (goalLat - nowLat);
+   distance = sqrt(pow(deltaLat, 2) + pow(deltaLon, 2));
+  // 機体座標に変換，回転行列使うよ，deg2radするよ
+   bodyLon = deltaLon * cos(nowDeg / 180 * M_PI) + deltaLat * sin(nowDeg / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
+   bodyLat = deltaLon * sin(nowDeg / 180 * M_PI) + deltaLat * cos(nowDeg / 180 * M_PI); // [y']   [-sin(th)    cos(th)] [y]
+
+  // 機体座標系でのゴールまでの角度を計算
+  if (bodyLat > 0) {
+    bodyAngle = fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
+  } else if (bodyLat < 0) {
+     bodyAngle = 180 - fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
+  } else {
+      bodyAngle = 90;
+  }
+
+  // ある角度以内なら真っ直ぐ，それ以外で右は右，左は左．
+  if (bodyAngle < ANGLE_THRE) {
+     direct = 0; //真っ直ぐ
+  } else {
+    if (bodyLon >= 0) {
+       direct = 1; //右
+    } else {
+       direct = -1; //左
+    }
+  }
+
+  // モータの駆動
+  if (direct == 0) {
+    rightMotor.go(255);
+    leftMotor.go(255);
+  } else if (direct == 1) { //右
+    rightMotor.go(255 * (1 - bodyAngle / 180));
+    leftMotor.go(255);
+  } else if (direct == -1) { //左
+    rightMotor.go(255);
+    leftMotor.go(255 * (1 - bodyAngle / 180));
+  }
+}
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////
 ///**
 //  @void guidance2

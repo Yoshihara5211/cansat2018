@@ -50,8 +50,7 @@ Motor rightMotor = Motor(RIGHT_MOTOR_VREF_PIN, RIGHT_MOTOR_IN1_PIN, RIGHT_MOTOR_
     void sendXbee();  // 無線送信
 
     // setup関数
-    void setGoal(int x_goal);  // ゴール座標設定関数
-
+    void setGoal(float lon, float lat);  // ゴール座標設定関数
     // sequence関数
     void preparing();
     void flying();
@@ -60,7 +59,7 @@ Motor rightMotor = Motor(RIGHT_MOTOR_VREF_PIN, RIGHT_MOTOR_IN1_PIN, RIGHT_MOTOR_
     void running();
 //    ///////////////////
 //    void stucking();
-//    void guidance1(float nowLat, float nowLon, float nowDeg, float goalLat, float goalLon);  // GPS + COMPASS
+    void guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat);  // GPS + COMPASS
 //    void guidance2(float nowLat, float nowLon, float goalLat, float goalLon);  // GPS only　<<<<<---小菅
 //    void guidance3();  // <<<<<----富吉
 //    //////////////////////////////////////
@@ -91,12 +90,22 @@ int state = 0;
 float destLon;
 float destLat;
 
-unsigned long preparingTime=0;
-  unsigned long flyingTime=0;
-  unsigned long droppingTime=0;
-  unsigned long landingTime=0;
-  unsigned long runningTime=0;
-  unsigned long _startStuckingTime=0;
+int preparingTime=0;
+int flyingTime=0;
+int droppingTime=0;
+int landingTime=0;
+int runningTime=0;
+int startStuckingTime=0;
+
+float deltaLon=0;
+float deltaLat=0;
+float distance=0;
+float bodyLon=0;
+float bodyLat=0;
+int bodyAngle=0;
+int direct=0;
+
+
 };
 
 #endif
