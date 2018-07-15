@@ -13,7 +13,7 @@ class MIC {
     
     void FFT();//録音→fftまでやってくれるマン
     void dispData(char *inMsg, char *inData, int inN);//音の高さごとの音の大きさを表示
-    void soundRead();
+    void soundRead();//最大音量とかを拾う
 
     
     char buf[20];            // 文字出力バッファ

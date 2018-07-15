@@ -149,59 +149,42 @@ void Cansat::test() {
 //}
 ///////////////////////////////////////////////////////////////////////////////////////////
 //void Cansat::sound_read() {
+//    // ここでどのマイクがどの高さの音をどの程度の大きさで拾っているのかを判定している
 //  mic1.FFT();
 //  mic2.FFT();
 //  mic3.FFT();
 //  mic4.FFT();
+//  mic1.soundRead();
+//  mic2.soundRead();
+//  mic3.soundRead();
+//  mic4.soundRead();
 //
-//  int maxdb[4] = {0, 0, 0, 0}; // 各マイクが拾った音の大きさ
-//  int freq[4] = {0, 0, 0, 0}; //各マイクが拾った音の高さ
-//  int i, j; // for文用
-//
-//  // 2kHz未満の音絶対拾わないマン
-//  for (i = 32; i < 64; i++) {
-//
-//    // なぜか音量がchar型でしかfftできないのでここでint型に変換
-//    sprintf(mic1.buf, "%5d", mic1.data[i]);
-//    sprintf(mic2.buf, "%5d", mic2.data[i]);
-//    sprintf(mic3.buf, "%5d", mic3.data[i]);
-//    sprintf(mic4.buf, "%5d", mic4.data[i]);
-//    int i1 = atoi(mic1.buf);
-//    int i2 = atoi(mic2.buf);
-//    int i3 = atoi(mic3.buf);
-//    int i4 = atoi(mic4.buf);
-//    //変換完了
-//
-//    //maxdb[0],i1,freq[0]はマイク1の担当
-//    if (maxdb[0] < i1) {
-//      maxdb[0] = i1;
-//      freq[0] = i;
-//    }
-//    if (maxdb[1] < i2) {
-//      maxdb[1] = i2;
-//      freq[1] = i;
-//    }
-//    if (maxdb[2] < i3) {
-//      maxdb[2] = i3;
-//      freq[2] = i;
-//    }
-//    if (maxdb[3] < i4) {
-//      maxdb[3] = i4;
-//      freq[3] = i;
+//  vol[4] = {mic1.maxvol, mic2.maxvol, mic3.maxvol, mic4.maxvol}; // 各マイクが拾った音の大きさ
+//  freq[4] = {mic1.maxfreq, mic2.maxfreq, mic3.maxfreq, mic4.maxfreq}; //各マイクが拾った音の高さ
+//  number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
+//  // 並び替え(バブルソート)→音が大きい順にvol,freq,numberを並び替える
+//  int i, j, temp;
+//  for (i = 0; i < 3; i++) {
+//    for (j = 3; j > i; j--) {
+//      if (vol[j - 1] < vol[j]) {
+//        temp = vol[j - 1];
+//        vol[j - 1] = vol[j];
+//        vol[j] = temp;
+//        temp = freq[j - 1];
+//        freq[j - 1] = freq[j];
+//        freq[j] = temp;
+//        temp = number[j - 1];
+//        number[j - 1] = number[j];
+//        number[j] = temp;
+//      }
 //    }
 //  }
-//  //4つのマイクが拾った音の内
-//  maxvol = 0, maxfreq = 0;
-//  for (j = 0; j < 4; j++) {
-//    if (maxvol < maxdb[j]) {
-//      maxvol = maxdb[j];
-//      maxfreq = freq[j];
-//      direc = j + 1;
-//    }
-//  }
+//
+//  // 以下三行は場合によっては不要
+//  maxvol=vol[0];
+//  maxfreq=freq[0];
+//  maxnumber=number[0]
 //}
-//
-//
 ///////////////////////////////////////////////////////////////////////////////////////////
 //// 地磁気センサ＋マイクのアルゴリズム
 //void Cansat::guidance3() {
