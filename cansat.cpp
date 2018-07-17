@@ -18,8 +18,9 @@ Cansat::~Cansat() {
 void Cansat::setup() {
   Serial.begin(9600);
   sd.setupSd();
+  Serial.println("Sd is ok");
   radio.setupRadio();
-  Serial.println("Xbee is ok");
+  Serial.println("Radio is ok");
   gps.setupGps();
   Serial.println("Gps is ok");
   acc.setupAcc();
@@ -49,9 +50,9 @@ void Cansat::test() {
   gps.readGps();
   Serial.println("Gps is ok");
   writeSd();
-  Serial.println("log_ok");
+  Serial.println("log is ok");
   sendXbee();
-  Serial.println("radio.ok");
+  Serial.println("radio is ok");
 }
 
 
