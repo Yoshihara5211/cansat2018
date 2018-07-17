@@ -19,9 +19,6 @@ void setup() {
 }
 
 void loop() {
-//  cansat.sequence();
-//  cansat.writeSd();
-//  cansat.sendXbee();
-cansat.test();
-delay(0);
+  cansat.sensor();
+  cansat.sequence();
 }

@@ -25,6 +25,8 @@
 #define MIC_RIGHT_PIN A14
 #define MIC_LEFT_PIN A1 
 #define MIC_BACK_PIN A2
+#define RELEASING1_PIN 9
+#define RELEASING2_PIN 10 
 
 #define BEAT 100   // 音の長さを指定
 
@@ -32,16 +34,27 @@
 //シークエンス
 #define PREPARING 0   // 電源オン
 #define FLYING 1  // 格納検知
-#define DROPING 2  // 放出検知
+#define DROPPING 2  // 放出検知
 #define LANDING 3  // 着地検知
 #define RUNNING 4  // 走行アルゴリズム
 #define GOAL 5  // ゴール検知
 #define STUCKING 6  // スタック検知
 
 //閾値
+#define LIGHT1_THRE 100
+#define COUNT_LIGHT1_LOOP_THRE 100
+#define LIGHT2_THRE 100
+#define COUNT_LIGHT2_LOOP_THRE 100
+#define ACC_THRE 12
+#define COUNT_ACC_LOOP_THRE 100
+#define LANDING_TIME_THRE 300000
+#define RELEASING1_TIME_THRE 300000
+#define RELEASING1_TIME2_THRE 330000
+#define RELEASING2_TIME_THRE 300000
+#define GOAL_THRE 5
+
+
 #define ANGLE_THRE 20
-
-
 
 #endif
 
