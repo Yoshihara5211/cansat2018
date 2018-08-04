@@ -20,5 +20,5 @@ void setup() {
 
 void loop() {
   cansat.sensor();
-  cansat.sequence();
+//  cansat.sequence();
 }

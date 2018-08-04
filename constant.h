@@ -21,10 +21,10 @@
 #define ACC_Y_PIN A7
 #define ACC_Z_PIN A6
 #define LIGHT_PIN A3
-#define MIC_FRONT_PIN A0
-#define MIC_RIGHT_PIN A14
-#define MIC_LEFT_PIN A1 
-#define MIC_BACK_PIN A2
+#define MIC_FRONT_PIN A2
+#define MIC_RIGHT_PIN A0
+#define MIC_LEFT_PIN A14 
+#define MIC_BACK_PIN A1
 #define RELEASING1_PIN 9
 #define RELEASING2_PIN 10 
 

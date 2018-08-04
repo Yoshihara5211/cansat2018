@@ -85,12 +85,16 @@ void Cansat::sensor() {
   if (state != FLYING) sendXbee();
   Serial.println("radio is ok");
 
-//  if (gps.lon < 1 && gps.lat < 1) {
-//    leftMotor.stop();
-//    rightMotor.stop();
-//  } else {
-//    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-//  }
+
+   // GPS無しでは停止
+  if (gps.lat < 1 && gps.lon < 1) {
+    leftMotor.stop();
+    rightMotor.stop();
+  }
+  else {
+    // 走行フェーズではガイダンス則に従う
+    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+}
 }
 
 void Cansat::writeSd() {
