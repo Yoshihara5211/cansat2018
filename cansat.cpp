@@ -225,7 +225,7 @@ void Cansat::dropping() {
     if (millis() - landingTime > RELEASING1_TIME2_THRE) digitalWrite(RELEASING1_PIN, LOW);
   }
   // 加速度から着地検知
-  if ((pow(acc.ax, 2) + pow(acc.ay, 2) + pow(acc.az, 2)) < (ACC_THRE, 2)) {
+  if ((pow(acc.ax, 2) + pow(acc.ay, 2) + pow(acc.az, 2)) < pow(ACC_THRE, 2)) {
     countDropLoop++;
     if (countDropLoop > COUNT_ACC_LOOP_THRE) state = LANDING;
   }
@@ -248,18 +248,25 @@ void Cansat::landing() {
   }
   // 着地フェーズでは第2パラシュート分離を行う
   digitalWrite(RELEASING2_PIN, HIGH);
+  countReleasingLoop++;
   if (landingTime != 0) {
-    if (millis() - landingTime > RELEASING2_TIME_THRE) digitalWrite(RELEASING2_PIN, LOW);
+  if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE){
+    digitalWrite(RELEASING2_PIN, LOW);
     state = RUNNING;
+  }
+//  if (landingTime != 0) {
+//    if (millis() - landingTime > RELEASING2_TIME_THRE) state = RUNNING;
+//    digitalWrite(RELEASING2_PIN, LOW);
   }
 }
 
 // State = 4
 void Cansat::running() {
+  digitalWrite(RELEASING2_PIN, LOW);
   digitalWrite(RED_LED_PIN, LOW);
   digitalWrite(BLUE_LED_PIN, LOW);
   digitalWrite(GREEN_LED_PIN, LOW);
-  // GPS無しでは停止
+ // GPS無しでは停止
   if (gps.lat < 1 && gps.lon < 1) {
     leftMotor.stop();
     rightMotor.stop();
