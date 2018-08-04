@@ -85,12 +85,12 @@ void Cansat::sensor() {
   if (state != FLYING) sendXbee();
   Serial.println("radio is ok");
 
-//  if (gps.lon < 1 && gps.lat < 1) {
-//    leftMotor.stop();
-//    rightMotor.stop();
-//  } else {
-//    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-//  }
+  //  if (gps.lon < 1 && gps.lat < 1) {
+  //    leftMotor.stop();
+  //    rightMotor.stop();
+  //  } else {
+  //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+  //  }
 }
 
 void Cansat::writeSd() {
@@ -139,26 +139,26 @@ void Cansat::sendXbee() {
 
 // sequence関数
 ///////////////////////////////////////////////////////////////////////////////////
-void Cansat::sequence(){
+void Cansat::sequence() {
   switch (state) {
-      case PREPARING: 
+    case PREPARING:
       preparing();
-        break;
-      case FLYING: 
-        flying();
-        break;
-      case DROPPING: 
-        dropping();
-        break;
-      case LANDING: 
-        landing();
-        break;
-      case RUNNING: 
-        running();
-        break;
-      case GOAL:
-        goal();
-        break;
+      break;
+    case FLYING:
+      flying();
+      break;
+    case DROPPING:
+      dropping();
+      break;
+    case LANDING:
+      landing();
+      break;
+    case RUNNING:
+      running();
+      break;
+    case GOAL:
+      goal();
+      break;
   }
 }
 
@@ -416,7 +416,7 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 //}
 
 // State = 5
-void Cansat::goal(){
+void Cansat::goal() {
   leftMotor.stopSlowly();
   rightMotor.stopSlowly();
   digitalWrite(RED_LED_PIN, HIGH); delay(100);
@@ -425,12 +425,185 @@ void Cansat::goal(){
   digitalWrite(RED_LED_PIN, LOW); delay(100);
   digitalWrite(BLUE_LED_PIN, LOW); delay(100);
   digitalWrite(GREEN_LED_PIN, LOW); delay(100);
-  }
+}
 ///////////////////////////////////////////////////////////////////////////////////
 
 
+void Cansat::test() {
+  Serial.println("---------------------------------------------------------------");
+  micf.FFT();
+  micr.FFT();
+  micl.FFT();
+  micb.FFT();
+  micf.soundRead();
+  micr.soundRead();
+  micl.soundRead();
+  micb.soundRead();
+  //  Serial.println("Mic is ok");
+  //  light.readLight();
+  //  Serial.println("Light is ok");
+  //  acc.readAcc();
+  //  Serial.println("Acc is ok");
+  //  compass.readCompass();
+  //  Serial.println("Compass is ok");
+  //  gps.readGps();
+  //  Serial.println("Gps is ok");
+  //  writeSd();
+  //  Serial.println("log_ok");
+  //  sendXbee();
+  //  Serial.println("radio.ok");
+
+  // ここからは書き換えたもの//////////////////////////////////////////////////////////////////////
+  int vol[4] = {micf.maxvol, micr.maxvol, micb.maxvol, micl.maxvol}; // 各マイクが拾った音の大きさ
+  int freq[4] = {micf.maxfreq, micr.maxfreq, micb.maxfreq, micl.maxfreq}; //各マイクが拾った音の高さ
+  int number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
+
+  // 並び替え(バブルソート)→音が大きい順にvol,freq,numberを並び替える
+  int i, j, temp;
+  for (i = 0; i < 3; i++) {
+    for (j = 3; j > i; j--) {
+      if (vol[j - 1] < vol[j]) {
+        temp = vol[j - 1];
+        vol[j - 1] = vol[j];
+        vol[j] = temp;
+        temp = freq[j - 1];
+        freq[j - 1] = freq[j];
+        freq[j] = temp;
+        temp = number[j - 1];
+        number[j - 1] = number[j];
+        number[j] = temp;
+      }
+    }
+  }
+
+  //　向き判定
+  if (vol[0] < 4) {
+    vol[0] = 0;
+    freq[0] = 0;
+    direct = 0;
+  }
+  else if (vol[0] > 5) {
+    if ((float)vol[0] / (float)vol[1] > 1.5) {
+      direct = 2 * number[0] - 1;
+    }
+    else if ((number[0] == 1 && number[1] == 2) || (number[0] == 2 && number[1] == 1)) {
+      direct = 2;
+    }
+    else if ((number[0] == 2 && number[1] == 3) || (number[0] == 3 && number[1] == 2)) {
+      direct = 4;
+    }
+    else if ((number[0] == 3 && number[1] == 4) || (number[0] == 4 && number[1] == 3)) {
+      direct = 6;
+    }
+    else if ((number[0] == 4 && number[1] == 1) || (number[0] == 1 && number[1] == 4)) {
+      direct = 8;
+    } else {
+      direct = 9; // なんかバグってます
+    }
+  } else {
+    direct = 2 * number[0] - 1;
+  }
+
+  //モーター系
+  if (direct == 0) {
+    Serial.println("No sound detected");
+    rightMotor.stop();
+    leftMotor.stop();
+  }
+  else if (direct == 1) {
+    Serial.println("front");
+    rightMotor.go(255);
+    leftMotor.go(255);
+  }
+  else if (direct == 2) {
+    Serial.println("front/right");
+    rightMotor.go(122.5);
+    leftMotor.go(255);
+  }
+  else if (direct == 3) {
+    Serial.println("right");
+    rightMotor.stop();
+    leftMotor.go(255);
+  }
+  else if (direct == 4) {
+    Serial.println("right/back");
+    rightMotor.back(122.5);
+    leftMotor.back(255);
+  }
+  else if (direct == 5) {
+    Serial.println("back");
+    rightMotor.back(255);
+    leftMotor.back(255);
+  }
+  else if (direct == 6) {
+    Serial.println("left/back");
+    rightMotor.back(255);
+    leftMotor.back(122.5);
+  }
+  else if (direct == 7) {
+    Serial.println("left");
+    rightMotor.go(255);
+    leftMotor.stop();
+  }
+  else if (direct == 8) {
+    Serial.println("front/left");
+    rightMotor.go(255);
+    leftMotor.go(122.5);
+  }
+  else {
+    Serial.println("なんかバグってますよ");
+  }
 
 
+  // ここからは音の高さで方向検知するやつ
+  // 2290Hzから70Hz刻みでやってます。
+  if (freq[0] == 33) {
+    Serial.println("12時");
+  }
+  else if (freq[0] == 34) {
+    Serial.println("1時");
+  }
+  else if (freq[0] == 35) {
+    Serial.println("2時");
+  }
+  else if (freq[0] == 36) {
+    Serial.println("3時");
+  }
+  else if (freq[0] == 37) {
+    Serial.println("4時");
+  }
+  else if (freq[0] == 38) {
+    Serial.println("5時");
+  }
+  else if (freq[0] == 39) {
+    Serial.println("6時");
+  }
+  else if (freq[0] == 40) {
+    Serial.println("7時");
+  }
+  else if (freq[0] == 41) {
+    Serial.println("8時");
+  }
+  else if (freq[0] == 42) {
+    Serial.println("9時");
+  }
+  else if (freq[0] == 43) {
+    Serial.println("10時");
+  }
+  else if (freq[0] == 44) {
+    Serial.println("11時");
+  }
+
+  Serial.print("音のでかさは：");
+  Serial.println(vol[0]);
+  Serial.print("音の高さは：");
+  if (freq[0] - 33 < 0) {
+    Serial.print(0);
+  } else {
+    Serial.print((freq[0] - 33) * 70 + 2290);
+  }
+  Serial.println(" Hz");
+}
 
 
 

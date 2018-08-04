@@ -8,11 +8,11 @@
 
 //ピン番号指定  
 #define LEFT_MOTOR_VREF_PIN 4
-#define LEFT_MOTOR_IN1_PIN 3
-#define LEFT_MOTOR_IN2_PIN 2
+#define LEFT_MOTOR_IN1_PIN 2
+#define LEFT_MOTOR_IN2_PIN 3
 #define RIGHT_MOTOR_VREF_PIN 45
-#define RIGHT_MOTOR_IN1_PIN 44
-#define RIGHT_MOTOR_IN2_PIN 46
+#define RIGHT_MOTOR_IN1_PIN 46
+#define RIGHT_MOTOR_IN2_PIN 44
 #define RED_LED_PIN A9
 #define BLUE_LED_PIN A5
 #define GREEN_LED_PIN A4
@@ -21,10 +21,10 @@
 #define ACC_Y_PIN A7
 #define ACC_Z_PIN A6
 #define LIGHT_PIN A3
-#define MIC_FRONT_PIN A0
-#define MIC_RIGHT_PIN A14
-#define MIC_LEFT_PIN A1 
-#define MIC_BACK_PIN A2
+#define MIC_FRONT_PIN A2
+#define MIC_RIGHT_PIN A0
+#define MIC_LEFT_PIN A14 
+#define MIC_BACK_PIN A1
 #define RELEASING1_PIN 9
 #define RELEASING2_PIN 10 
 

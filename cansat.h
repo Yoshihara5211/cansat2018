@@ -59,6 +59,7 @@ class Cansat {
     void sendXbee();  // 無線送信
 
     // sequence()構成関数
+    void test();
     void preparing();
     void flying();
     void dropping();
