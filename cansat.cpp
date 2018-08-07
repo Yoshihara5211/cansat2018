@@ -269,18 +269,19 @@ void Cansat::running() {
   digitalWrite(BLUE_LED_PIN, LOW);
   digitalWrite(GREEN_LED_PIN, LOW);
   // GPS無しでは停止
-  if (gps.lat < 1 && gps.lon < 1) {
-    leftMotor.stop();
-    rightMotor.stop();
-  }
-  else {
-    if (runningTime == 0) {
-      runningTime = millis();
-    }
-    // 走行フェーズではガイダンス則に従う
-    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
-  }
+  //  if (gps.lat < 1 && gps.lon < 1) {
+  //    leftMotor.stop();
+  //    rightMotor.stop();
+  //  }
+  //  else {
+  //    if (runningTime == 0) {
+  //      runningTime = millis();
+  //    }
+  // 走行フェーズではガイダンス則に従う
+  guidance3();
+  //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+  //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
+  //  }
 }
 
 void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat) {
@@ -429,7 +430,108 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 //  }
 //  // この後cansatに東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
 //}
+
 void Cansat::guidance3() {
+  // ここからは書き換えたもの//////////////////////////////////////////////////////////////////////
+  int vol[4] = {micf.maxvol, micr.maxvol, micb.maxvol, micl.maxvol}; // 各マイクが拾った音の大きさ
+  int freq[4] = {micf.maxfreq, micr.maxfreq, micb.maxfreq, micl.maxfreq}; //各マイクが拾った音の高さ
+  int number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
+
+  // 並び替え(バブルソート)→音が大きい順にvol,freq,numberを並び替える
+  int i, j, temp;
+  for (i = 0; i < 3; i++) {
+    for (j = 3; j > i; j--) {
+      if (vol[j - 1] < vol[j]) {
+        temp = vol[j - 1];
+        vol[j - 1] = vol[j];
+        vol[j] = temp;
+        temp = freq[j - 1];
+        freq[j - 1] = freq[j];
+        freq[j] = temp;
+        temp = number[j - 1];
+        number[j - 1] = number[j];
+        number[j] = temp;
+      }
+    }
+  }
+
+  //　向き判定
+  if (vol[0] < 4) {
+    vol[0] = 0;
+    freq[0] = 0;
+    direct = 0;
+  }
+  else if (vol[0] > 5) {
+    if ((float)vol[0] / (float)vol[1] > 1.5) {
+      direct = 2 * number[0] - 1;
+    }
+    else if ((number[0] == 1 && number[1] == 2) || (number[0] == 2 && number[1] == 1)) {
+      direct = 2;
+    }
+    else if ((number[0] == 2 && number[1] == 3) || (number[0] == 3 && number[1] == 2)) {
+      direct = 4;
+    }
+    else if ((number[0] == 3 && number[1] == 4) || (number[0] == 4 && number[1] == 3)) {
+      direct = 6;
+    }
+    else if ((number[0] == 4 && number[1] == 1) || (number[0] == 1 && number[1] == 4)) {
+      direct = 8;
+    } else {
+      direct = 9; // なんかバグってます
+    }
+  } else {
+    direct = 2 * number[0] - 1;
+  }
+
+  //モーター系
+  if (direct == 0) {
+    Serial.println("No sound detected");
+    rightMotor.stop();
+    leftMotor.stop();
+  }
+  else if (direct == 1) {
+    Serial.println("front");
+    rightMotor.go(255);
+    leftMotor.go(255);
+  }
+  else if (direct == 2) {
+    Serial.println("front/right");
+    rightMotor.go(122.5);
+    leftMotor.go(255);
+  }
+  else if (direct == 3) {
+    Serial.println("right");
+    rightMotor.stop();
+    leftMotor.go(255);
+  }
+  else if (direct == 4) {
+    Serial.println("right/back");
+  //  rightMotor.back(122.5);
+    leftMotor.go(255);
+  }
+  else if (direct == 5) {
+    Serial.println("back");
+   // rightMotor.back(255);
+    leftMotor.go(255);
+  }
+  else if (direct == 6) {
+    Serial.println("left/back");
+    rightMotor.go(255);
+  //  leftMotor.back(122.5);
+  }
+  else if (direct == 7) {
+    Serial.println("left");
+    rightMotor.go(255);
+    leftMotor.stop();
+  }
+  else if (direct == 8) {
+    Serial.println("front/left");
+    rightMotor.go(255);
+    leftMotor.go(122.5);
+  }
+  else {
+    Serial.println("なんかバグってますよ");
+  }
 }
 
 

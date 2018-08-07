@@ -67,7 +67,7 @@ class Cansat {
     ////////////// running()構成関数
     void guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat);
     //    void guidance2(float nowLat, float nowLon, float goalLat, float goalLon);
-    //    void guidance3();
+        void guidance3();
     //    void guidance4();
     //////////////
     void goal();
