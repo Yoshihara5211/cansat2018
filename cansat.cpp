@@ -85,18 +85,18 @@ void Cansat::sensor() {
   if (state != FLYING) sendXbee();
   Serial.println("radio is ok");
 
-//////////////////////////////////////////////////////
-// guidance1テスト
-//   // GPS無しでは停止
-//  if (gps.lat < 1 && gps.lon < 1) {
-//    leftMotor.stop();
-//    rightMotor.stop();
-//  }
-//  else {
-//    // 走行フェーズではガイダンス則に従う
-//    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-//}
-//////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////
+  // guidance1テスト
+  //   // GPS無しでは停止
+  //  if (gps.lat < 1 && gps.lon < 1) {
+  //    leftMotor.stop();
+  //    rightMotor.stop();
+  //  }
+  //  else {
+  //    // 走行フェーズではガイダンス則に従う
+  //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+  //}
+  //////////////////////////////////////////////////////
 }
 
 void Cansat::writeSd() {
@@ -145,26 +145,28 @@ void Cansat::sendXbee() {
 
 // sequence関数
 ///////////////////////////////////////////////////////////////////////////////////
-void Cansat::sequence(){
+void Cansat::sequence() {
   switch (state) {
-      case PREPARING: 
+    case PREPARING:
       preparing();
-        break;
-      case FLYING: 
-        flying();
-        break;
-      case DROPPING: 
-        dropping();
-        break;
-      case LANDING: 
-        landing();
-        break;
-      case RUNNING: 
-        running();
-        break;
-      case GOAL:
-        goal();
-        break;
+      break;
+    case FLYING:
+      flying();
+      break;
+    case DROPPING:
+      dropping();
+      break;
+    case LANDING:
+      landing();
+      break;
+    case RUNNING:
+      digitalWrite(RELEASING1_PIN, LOW);
+      digitalWrite(RELEASING2_PIN, LOW);
+      running();
+      break;
+    case GOAL:
+      goal();
+      break;
   }
 }
 
@@ -218,12 +220,12 @@ void Cansat::dropping() {
     digitalWrite(GREEN_LED_PIN, LOW);
   }
   // 落下フェーズでは第1パラシュート分離を行う
-  if (landingTime != 0) {
-    if (millis() - landingTime > RELEASING1_TIME_THRE) digitalWrite(RELEASING1_PIN, HIGH);
-  }
-  if (landingTime != 0) {
-    if (millis() - landingTime > RELEASING1_TIME2_THRE) digitalWrite(RELEASING1_PIN, LOW);
-  }
+  //  if (landingTime != 0) {
+  //    if (millis() - landingTime > RELEASING1_TIME_THRE) digitalWrite(RELEASING1_PIN, HIGH);
+  //  }
+  //  if (landingTime != 0) {
+  //    if (millis() - landingTime > RELEASING1_TIME2_THRE) digitalWrite(RELEASING1_PIN, LOW);
+  //  }
   // 加速度から着地検知
   if ((pow(acc.ax, 2) + pow(acc.ay, 2) + pow(acc.az, 2)) < pow(ACC_THRE, 2)) {
     countDropLoop++;
@@ -250,13 +252,13 @@ void Cansat::landing() {
   digitalWrite(RELEASING2_PIN, HIGH);
   countReleasingLoop++;
   if (landingTime != 0) {
-  if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE){
-    digitalWrite(RELEASING2_PIN, LOW);
-    state = RUNNING;
-  }
-//  if (landingTime != 0) {
-//    if (millis() - landingTime > RELEASING2_TIME_THRE) state = RUNNING;
-//    digitalWrite(RELEASING2_PIN, LOW);
+    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
+      digitalWrite(RELEASING2_PIN, LOW);
+      state = RUNNING;
+    }
+    //  if (landingTime != 0) {
+    //    if (millis() - landingTime > RELEASING2_TIME_THRE) state = RUNNING;
+    //    digitalWrite(RELEASING2_PIN, LOW);
   }
 }
 
@@ -266,7 +268,7 @@ void Cansat::running() {
   digitalWrite(RED_LED_PIN, LOW);
   digitalWrite(BLUE_LED_PIN, LOW);
   digitalWrite(GREEN_LED_PIN, LOW);
- // GPS無しでは停止
+  // GPS無しでは停止
   if (gps.lat < 1 && gps.lon < 1) {
     leftMotor.stop();
     rightMotor.stop();
@@ -429,7 +431,7 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 //}
 
 // State = 5
-void Cansat::goal(){
+void Cansat::goal() {
   leftMotor.stopSlowly();
   rightMotor.stopSlowly();
   digitalWrite(RED_LED_PIN, HIGH); delay(100);
@@ -438,7 +440,7 @@ void Cansat::goal(){
   digitalWrite(RED_LED_PIN, LOW); delay(100);
   digitalWrite(BLUE_LED_PIN, LOW); delay(100);
   digitalWrite(GREEN_LED_PIN, LOW); delay(100);
-  }
+}
 ///////////////////////////////////////////////////////////////////////////////////
 
 
