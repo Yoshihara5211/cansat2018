@@ -429,6 +429,9 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 //  }
 //  // この後cansatに東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
 //}
+void Cansat::guidance3() {
+}
+
 
 // State = 5
 void Cansat::goal() {
