@@ -189,30 +189,178 @@ void Cansat::test() {
 //    }
 //  }
 //}
-//
-//
+////////////////////////////////////////////////////////////////
+//  // 並び替え(バブルソート)→音が大きい順にvol,freq,numberを並び替える
+//void Cansat::sound_sort() {
+//  int i, j, temp;
+//  for (i = 0; i < 3; i++) {
+//    for (j = 3; j > i; j--) {
+//      if (vol[j - 1] < vol[j]) {
+//        temp = vol[j - 1];
+//        vol[j - 1] = vol[j];
+//        vol[j] = temp;
+//        temp = freq[j - 1];
+//        freq[j - 1] = freq[j];
+//        freq[j] = temp;
+//        temp = number[j - 1];
+//        number[j - 1] = number[j];
+//        number[j] = temp;
+//      }
+//    }
+//  }
+//}
 ///////////////////////////////////////////////////////////////////////////////////////////
 //// 地磁気センサ＋マイクのアルゴリズム
 //void Cansat::guidance3() {
+//  vol[4] = {micf.maxvol, micr.maxvol, micb.maxvol, micl.maxvol}; // 各マイクが拾った音の大きさ
+//  freq[4] = {micf.maxfreq, micr.maxfreq, micb.maxfreq, micl.maxfreq}; //各マイクが拾った音の高さ
+//  number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
 //
-//  sound_read();
+//  sound_sort();
 //
-//  if (maxvol < 5) {
-//    // sound_read()で音が取れてないときの例外処理
+//   if (vol[0] < 4) {
+//    vol[0] = 0;
+//    freq[0] = 0;
+//    direc = 0;
 //  }
-//  // この後cansatに東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
+// ここからは音の高さで方向検知するやつ
+// 2290Hzから70Hz刻みでやってます。
+//if(freq[0]==33){
+//  Serial.println("12時");
+//  }
+//else if(freq[0]==34){
+//  Serial.println("1時");
+//}
+//else if(freq[0]==35){
+//  Serial.println("2時");
+//}
+//else if(freq[0]==36){
+//  Serial.println("3時");
+//}
+//else if(freq[0]==37){
+//  Serial.println("4時");
+//}
+//else if(freq[0]==38){
+//  Serial.println("5時");
+//}
+//else if(freq[0]==39){
+//  Serial.println("6時");
+//}
+//else if(freq[0]==40){
+//  Serial.println("7時");
+//}
+//else if(freq[0]==41){
+//  Serial.println("8時");
+//}
+//else if(freq[0]==42){
+//  Serial.println("9時");
+//}
+//else if(freq[0]==43){
+//  Serial.println("10時");
+//}
+//else if(freq[0]==44){
+//  Serial.println("11時");
+//}
+//
+//Serial.print("音のでかさは：");
+//Serial.println(vol[0]);
+//Serial.print("音の高さは：");
+//if(freq[0]-33<0){
+//Serial.print(0);
+//}else{
+//  Serial.print((freq[0]-33)*70+2290);
+//}
+//Serial.println(" Hz");
 //}
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
-//// 地磁気センサなしでの走行アルゴリズム
+//// 地磁気センサなしでの走行アルゴリズム(これでひとまず完成)
 //void Cansat::guidance4() {
+//  vol[4] = {micf.maxvol, micr.maxvol, micb.maxvol, micl.maxvol}; // 各マイクが拾った音の大きさ
+//  freq[4] = {micf.maxfreq, micr.maxfreq, micb.maxfreq, micl.maxfreq}; //各マイクが拾った音の高さ
+//  number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
 //
-//  sound_read();
+//  sound_sort();
 //
-//  if (maxvol < 5) {
-//    // sound_read()で音が取れてないときの例外処理
+//  //　向き判定
+//  if (vol[0] < 4) {
+//    vol[0] = 0;
+//    freq[0] = 0;
+//    direc = 0;
 //  }
-//  // この後cansatに東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
+//  else if (vol[0] > 5) {
+//    if ((float)vol[0] / (float)vol[1] > 2.5) {
+//      direc = 2 * number[0] - 1;
+//    }
+//    else if ((number[0] == 1 && number[1] == 2) || (number[0] == 2 && number[1] == 1)) {
+//      direc = 2;
+//    }
+//    else if ((number[0] == 2 && number[1] == 3) || (number[0] == 3 && number[1] == 2)) {
+//      direc = 4;
+//    }
+//    else if ((number[0] == 3 && number[1] == 4) || (number[0] == 4 && number[1] == 3)) {
+//      direc = 6;
+//    }
+//    else if ((number[0] == 4 && number[1] == 1) || (number[0] == 1 && number[1] == 4)) {
+//      direc = 8;
+//    } else {
+//      direc = 9; // なんかバグってます
+//    }
+//  } else {
+//    direc = 2 * number[0] - 1;
+//  }
+//
+//  //モーター系
+//  if (direc == 0) {
+//    Serial.println("No sound detected");
+//    rightMotor.stop();
+//    leftMotor.stop();
+//  }
+//  else if (direc == 1) {
+//    Serial.println("front");
+//    rightMotor.go(255);
+//    leftMotor.go(255);
+//  }
+//  else if (direc == 2) {
+//    Serial.println("front/right");
+//    rightMotor.go(122.5);
+//    leftMotor.go(255);
+//  }
+//  else if (direc == 3) {
+//    Serial.println("right");
+//    rightMotor.stop();
+//    leftMotor.go(255);
+//  }
+//  else if (direc == 4) {
+//    Serial.println("right/back");
+//    rightMotor.back(122.5);
+//    leftMotor.back(255);
+//  }
+//  else if (direc == 5) {
+//    Serial.println("back");
+//    rightMotor.back(255);
+//    leftMotor.back(255);
+//  }
+//  else if (direc == 6) {
+//    Serial.println("left/back");
+//    rightMotor.back(255);
+//    leftMotor.back(122.5);
+//  }
+//  else if (direc == 7) {
+//    Serial.println("left");
+//    rightMotor.go(255);
+//    leftMotor.stop();
+//  }
+//  else if (direc == 8) {
+//    Serial.println("front/left");
+//    rightMotor.go(255);
+//    leftMotor.go(122.5);
+//  }
+//  else {
+//    Serial.println("なんかバグってますよ");
+//  }
+//
+//
 //}
 
 

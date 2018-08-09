@@ -66,7 +66,10 @@ Motor rightMotor = Motor(RIGHT_MOTOR_VREF_PIN, RIGHT_MOTOR_IN1_PIN, RIGHT_MOTOR_
 //    //////////////////////////////////////
 //    // 音の情報を取得する関数
 //    void sound_read();
+//    // 並び替えの関数
+//    void sound_sort();
 //    // 最大音量、最大音周波数、どの向きから音が来てるか(1→2→3→4、前→右→後→左)
+//    int vol[4],freq[4],nomber[4];
 //    int maxvol,maxfreq,direc;
 //    // 地磁気センサ＋マイクのアルゴリズム
 //    void guidance3();
