@@ -11,6 +11,7 @@
 #include "constant.h" //全ての定数はここ
 #include "cansat.h"
 
+
 Cansat cansat;
 
 

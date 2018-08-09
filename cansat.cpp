@@ -138,6 +138,8 @@ void Cansat::sendXbee() {
                      + String(micl.maxvol) + ","
                      + String(micb.maxfreq) + ","
                      + String(micb.maxvol) + ","
+                     + String(millis() - landingTime) + ","
+                     + String(landingTime) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -250,21 +252,25 @@ void Cansat::landing() {
   }
   // 着地フェーズでは第2パラシュート分離を行う
   digitalWrite(RELEASING2_PIN, HIGH);
-  countReleasingLoop++;
-  if (landingTime != 0) {
-    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
-      digitalWrite(RELEASING2_PIN, LOW);
-      state = RUNNING;
-    }
-    //  if (landingTime != 0) {
-    //    if (millis() - landingTime > RELEASING2_TIME_THRE) state = RUNNING;
-    //    digitalWrite(RELEASING2_PIN, LOW);
+  
+//  countReleasingLoop++;
+//  if (landingTime != 0) {
+//    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
+//      digitalWrite(RELEASING2_PIN, LOW);
+//      state = RUNNING;
+//    }
+
+      if (landingTime != 0) {
+        if (millis() - landingTime > RELEASING2_TIME_THRE){
+          state = RUNNING;
+          digitalWrite(RELEASING2_PIN, LOW);
+        }
   }
 }
 
 // State = 4
 void Cansat::running() {
-  digitalWrite(RELEASING2_PIN, LOW);
+  analogWrite(RELEASING2_PIN, 0);
   digitalWrite(RED_LED_PIN, LOW);
   digitalWrite(BLUE_LED_PIN, LOW);
   digitalWrite(GREEN_LED_PIN, LOW);
@@ -432,6 +438,8 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 //}
 
 void Cansat::guidance3() {
+  
+  digitalWrite(RELEASING2_PIN, LOW);
   // ここからは書き換えたもの//////////////////////////////////////////////////////////////////////
   int vol[4] = {micf.maxvol, micr.maxvol, micb.maxvol, micl.maxvol}; // 各マイクが拾った音の大きさ
   int freq[4] = {micf.maxfreq, micr.maxfreq, micb.maxfreq, micl.maxfreq}; //各マイクが拾った音の高さ
