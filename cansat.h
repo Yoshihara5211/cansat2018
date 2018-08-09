@@ -66,7 +66,7 @@ class Cansat {
     void running();
     ////////////// running()構成関数
     void guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat);
-    //    void guidance2(float nowLat, float nowLon, float goalLat, float goalLon);
+    void guidance2(float nowLat, float nowLon, float goalLat, float goalLon);
         void guidance3();
     //    void guidance4();
     //////////////
@@ -98,6 +98,12 @@ class Cansat {
     float bodyLat = 0;
     int bodyAngle = 0;
     int direct = 0;
+
+    float Lon1=0;
+    float Lat1=0;
+    float deg12=0;
+    float deg2g=0;
+
 };
 
 #endif
