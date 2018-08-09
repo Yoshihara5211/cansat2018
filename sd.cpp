@@ -24,7 +24,7 @@ void Sd::setupSd() {
     Serial.println("Card initialized.");              //in the case of SD card is available,
   }
   
-  String log_name = "millis, state, light, lat, lon, ax, ay, az, deg, micf_freq, micf_vol, micr_freq, micr_vol, micl_freq, micl_vol, micb_freq, micb_vol ";  // ログ保存データ名
+  String log_name = "millis, state, light, lat, lon, ax, ay, az, deg, micf_freq, micf_vol, micr_freq, micr_vol, micl_freq, micl_vol, micb_freq, micb_vol, direct, distance ";  // ログ保存データ名
   printSd("     ");
   printSd("     ");
   printSd("     ");
@@ -37,11 +37,15 @@ void Sd::setupSd() {
   printSd("     ");
   printSd("     ");
   printSd("     ");
+  
+  printSd("     ");
+  printSd("     ");
+    
   printSd(log_name);
 }
 
 void Sd::printSd(String log_data) {
-  File file = SD.open("TEST0808.txt", FILE_WRITE);
+  File file = SD.open("tom08082.txt", FILE_WRITE);
   String _log_data = log_data;  // ログ保存データ
   if (file) {                                      //if the file in the SD card was open to wrihte, true or false
     file.println(_log_data);                          // write data into the file,

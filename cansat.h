@@ -7,6 +7,7 @@
 #define _CANSAT_H_
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "Arduino.h"
 #include "constant.h" //定数まとめ(ピン番号等)
 #include "motor.h"
@@ -97,6 +98,7 @@ class Cansat {
     float bodyLat = 0;
     int bodyAngle = 0;
     int direct = 0;
+    float distance2;
 };
 
 #endif

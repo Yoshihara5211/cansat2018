@@ -116,7 +116,9 @@ void Cansat::writeSd() {
                     + String(micl.maxfreq) + ", "
                     + String(micl.maxvol) + ", "
                     + String(micb.maxfreq) + ", "
-                    + String(micb.maxvol);
+                    + String(micb.maxvol) + ", "
+                    + String(direct) + ","
+                    + String(distance2);
   sd.printSd(log_data);
 }
 
@@ -138,6 +140,9 @@ void Cansat::sendXbee() {
                      + String(micl.maxvol) + ","
                      + String(micb.maxfreq) + ","
                      + String(micb.maxvol) + ","
+                     + String(direct) + ","
+                     //+ String(round(15000 * 0.05 * exp(-0.05 * vol[0])))
+                     + String(distance2)
                      + "e";
   radio.sendData(send_data);
 }
@@ -184,6 +189,7 @@ void Cansat::preparing() {
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
     if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;
+    
   }
   else {
     countPreLoop = 0;
@@ -456,13 +462,13 @@ void Cansat::guidance3() {
   }
 
   //　向き判定
-  if (vol[0] < 4) {
+  if (vol[0] < 5) {
     vol[0] = 0;
     freq[0] = 0;
     direct = 0;
   }
   else if (vol[0] > 5) {
-    if ((float)vol[0] / (float)vol[1] > 1.5) {
+    if ((float)vol[0] / (float)vol[1] > 1.3) {
       direct = 2 * number[0] - 1;
     }
     else if ((number[0] == 1 && number[1] == 2) || (number[0] == 2 && number[1] == 1)) {
@@ -506,18 +512,21 @@ void Cansat::guidance3() {
   }
   else if (direct == 4) {
     Serial.println("right/back");
-  //  rightMotor.back(122.5);
+    //  rightMotor.back(122.5);
+    rightMotor.stop();
     leftMotor.go(255);
   }
   else if (direct == 5) {
     Serial.println("back");
-   // rightMotor.back(255);
+    // rightMotor.back(255);
+    rightMotor.stop();
     leftMotor.go(255);
   }
   else if (direct == 6) {
     Serial.println("left/back");
     rightMotor.go(255);
-  //  leftMotor.back(122.5);
+    leftMotor.stop();
+    //  leftMotor.back(122.5);
   }
   else if (direct == 7) {
     Serial.println("left");
@@ -532,13 +541,15 @@ void Cansat::guidance3() {
   else {
     Serial.println("なんかバグってますよ");
   }
+  distance2=round(15000 * 0.05 * exp(-0.05 * vol[0]));
+  if(vol[0]>70) state=GOAL;
 }
 
 
 // State = 5
 void Cansat::goal() {
-  leftMotor.stopSlowly();
-  rightMotor.stopSlowly();
+  leftMotor.stop();
+  rightMotor.stop();
   digitalWrite(RED_LED_PIN, HIGH); delay(100);
   digitalWrite(BLUE_LED_PIN, HIGH); delay(100);
   digitalWrite(GREEN_LED_PIN, HIGH); delay(100);

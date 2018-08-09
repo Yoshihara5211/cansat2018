@@ -12,7 +12,7 @@ Radio::~Radio() {
 
 void Radio::setupRadio() {
   Serial2.begin(9600);
-  String radio_name = "state, millis, light, lat, lon, ax, ay, az, deg, mic... ";
+  String radio_name = "state, millis, light, lat, lon, ax, ay, az, deg, mic...";
   Serial2.println(radio_name);
 }
 
