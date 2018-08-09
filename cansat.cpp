@@ -336,39 +336,60 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 //  @author Kosuge
 //  @date Created: 20170529
 //*/
-void Cansat::guidance2(float nowLat, float nowLon, float goalLat, float goalLon) {
-  // Lon=経度=x
-  // Lat=緯度=y
-  ////自分のGPSの値　初期値
-  float Lon1 = nowLon;
-  float Lat1 = nowLat;
-  ////モータの駆動
-t1 =millis();
-  if(millis()-t1<10000){
-  rightMotor.go(255);
-  leftMotor.go(255);
-}else{
-break;
-}
-  ////動いた後のGPSの値
-  float Lon2 = gps.lon
-               float Lat2 = gps.lat;
-  float xvel2g = (goalLon - Lon2) / sqrt(pow(goalLon - Lon2, 2) + pow(goalLat - Lat2, 2));
-  float yvel2g = (goalLat - Lat2) / sqrt(pow(goalLon - Lon2, 2) + pow(goalLat - Lat2, 2));
-  float deg2g = atan(yvel2g / xvel2g);
-  float xvel12 = (Lon2 - Lon1)sqrt(pow(goalLon - Lon2, 2) + pow(goalLat - Lat2, 2));
-  float yvel12 = (Lat2 - Lat1)sqrt(pow(goalLon - Lon2, 2) + pow(goalLat - Lat2, 2));
-  float deg12 = atan(yvel12 / xvel12);
-
-  ////モータの駆動
-  if (deg12 > deg2g) { //左を上げる
-    rightMotor.go(255 * 0.8);
-    leftMotor.go(255);
-  } else if (deg2g > deg12) { //右を上げる
-    rightMotor.go(255);
-    leftMotor.go(255 * 0.8);
-  }
-}
+//void Cansat::guidance2(float nowLat, float nowLon, float goalLat, float goalLon) {
+//  // Lon=経度=x
+//  // Lat=緯度=y
+//  
+////////////////まずは自分のGPSの値　初期値を出します
+//  if (countStraightLoop = 0) {
+//    float Lon1 = nowLon;
+//    float Lat1 = nowLat;
+//  }
+//
+////////////////その後とりあえずまっすぐ走ります
+//  else if (countStraightLoop < 100) {
+//    rightMotor.go(255);
+//    leftMotor.go(255);
+//  }
+//
+////////////////初期位置と動いた後の位置、動いた後の位置とゴールの位置の角度のずれから回転させます。
+//  else if (100<countStraightLoop&&countStraightLoop <120) {
+//    float Lon2 = nowLon;
+//    float Lat2 = nowLat;
+//    //角度計算→回転→初期位置の更新
+//
+//    //初期位置1と動いた後2のGPSの比較
+//    deltaLon12 = Lon2 - Lon1;
+//    deltaLat12 = Lat2 - Lat1;
+//    if (deltaLon12 > 0) {
+//      float deg12 = atan(deltaLat12 / deltaLon12) * 180 / M_PI;
+//    }
+//    if (deltaLon12 < 0) {
+//      float deg12 = atan(deltaLat12 / deltaLon12) * 180 / M_PI + 180;
+//    }
+//    ////動いた後2のGPSとゴールgのGPSの比較
+//    deltaLon2g = goalLon - Lon2;
+//    deltaLat2g = goalLat - Lat2;
+//    float distance2g = sqrt(pow(deltaLon2g, 2) + pow(deltaLat2g, 2));
+//    if (deltaLon2g > 0) {
+//      float deg2g = atan(deltaLat12 / deltaLon12) * 180 / M_PI;
+//    }
+//    if (deltaLon2g < 0) {
+//      float deg2g = atan(deltaLat12 / deltaLon12) * 180 / M_PI; +180;
+//    }
+//    ////機体を回転させる
+//      if (deg12 > deg2g) { //左を上げる
+//        rightMotor.go(255 * 0.8);
+//        leftMotor.go(255);
+//      } else if (deg2g > deg12) { //右を上げる
+//        rightMotor.go(255);
+//        leftMotor.go(255 * 0.8);
+//      }
+//      countStraightLoop = 0;
+//  }
+//  countStraightLoop++;
+//
+//}
 ///////////////////////////////////////////////////////////////////////////////////////////
 //void Cansat::sound_read() {
 //    // ここでどのマイクがどの高さの音をどの程度の大きさで拾っているのかを判定している
@@ -506,18 +527,18 @@ void Cansat::guidance3() {
   }
   else if (direct == 4) {
     Serial.println("right/back");
-  //  rightMotor.back(122.5);
+    //  rightMotor.back(122.5);
     leftMotor.go(255);
   }
   else if (direct == 5) {
     Serial.println("back");
-   // rightMotor.back(255);
+    // rightMotor.back(255);
     leftMotor.go(255);
   }
   else if (direct == 6) {
     Serial.println("left/back");
     rightMotor.go(255);
-  //  leftMotor.back(122.5);
+    //  leftMotor.back(122.5);
   }
   else if (direct == 7) {
     Serial.println("left");
