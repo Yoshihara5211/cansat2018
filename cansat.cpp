@@ -138,6 +138,10 @@ void Cansat::sendXbee() {
                      + String(micl.maxvol) + ","
                      + String(micb.maxfreq) + ","
                      + String(micb.maxvol) + ","
+                     + String(deg12) + ","
+                     + String(deg2g) + ","                    
+                     + String(countStraightLoop) + ","
+                     + String(direct)+","
                      + "e";
   radio.sendData(send_data);
 }
@@ -186,7 +190,8 @@ void Cansat::preparing() {
     if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;
   }
   else {
-    countPreLoop = 0;
+    // countPreLoop = 0;
+    state=RUNNING;
   }
 }
 
@@ -269,65 +274,67 @@ void Cansat::running() {
   digitalWrite(BLUE_LED_PIN, LOW);
   digitalWrite(GREEN_LED_PIN, LOW);
   // GPS無しでは停止
-  //  if (gps.lat < 1 && gps.lon < 1) {
-  //    leftMotor.stop();
-  //    rightMotor.stop();
-  //  }
-  //  else {
-  //    if (runningTime == 0) {
-  //      runningTime = millis();
-  //    }
+    if (gps.lat < 1 && gps.lon < 1) {
+      leftMotor.stop();
+      rightMotor.stop();
+    }
+    else {
+      if (runningTime == 0) {
+        runningTime = millis();
+      }
   // 走行フェーズではガイダンス則に従う
-  guidance3();
+  // guidance3();
+  guidance2(gps.lat,gps.lon,destLat,destLon);
   //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
   //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
   //  }
 }
-
-void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat) {
-  // Lon=経度=x
-  // Lat=緯度=y
-  // 地球の球体を考慮した座標値変換する必要あり
-  deltaLon = (goalLon - nowLon) ;
-  deltaLat = (goalLat - nowLat);
-  distance = sqrt(pow(deltaLat, 2) + pow(deltaLon, 2));
-  // 機体座標に変換，回転行列使うよ，deg2radするよ
-  bodyLon = deltaLon * cos(nowDeg / 180 * M_PI) + deltaLat * sin(nowDeg / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
-  bodyLat = deltaLon * sin(nowDeg / 180 * M_PI) + deltaLat * cos(nowDeg / 180 * M_PI); // [y']   [-sin(th)    cos(th)] [y]
-
-  // 機体座標系でのゴールまでの角度を計算
-  if (bodyLat > 0) {
-    bodyAngle = fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
-  } else if (bodyLat < 0) {
-    bodyAngle = 180 - fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
-  } else {
-    bodyAngle = 90;
-  }
-
-  // ある角度以内なら真っ直ぐ，それ以外で右は右，左は左．
-  if (bodyAngle < ANGLE_THRE) {
-    direct = 0; //真っ直ぐ
-  } else {
-    if (bodyLon >= 0) {
-      direct = 1; //右
-    } else {
-      direct = -1; //左
-    }
-  }
-
-  // モータの駆動
-  if (direct == 0) {
-    rightMotor.go(255);
-    leftMotor.go(255);
-  } else if (direct == 1) { //右
-    rightMotor.go(255 * (1 - bodyAngle / 180));
-    leftMotor.go(255);
-  } else if (direct == -1) { //左
-    rightMotor.go(255);
-    leftMotor.go(255 * (1 - bodyAngle / 180));
-  }
 }
 
+//void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat) {
+//  // Lon=経度=x
+//  // Lat=緯度=y
+//  // 地球の球体を考慮した座標値変換する必要あり
+//  deltaLon = (goalLon - nowLon) ;
+//  deltaLat = (goalLat - nowLat);
+//  distance = sqrt(pow(deltaLat, 2) + pow(deltaLon, 2));
+//  // 機体座標に変換，回転行列使うよ，deg2radするよ
+//  bodyLon = deltaLon * cos(nowDeg / 180 * M_PI) + deltaLat * sin(nowDeg / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
+//  bodyLat = deltaLon * sin(nowDeg / 180 * M_PI) + deltaLat * cos(nowDeg / 180 * M_PI); // [y']   [-sin(th)    cos(th)] [y]
+//
+//  // 機体座標系でのゴールまでの角度を計算
+//  if (bodyLat > 0) {
+//    bodyAngle = fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
+//  } else if (bodyLat < 0) {
+//    bodyAngle = 180 - fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
+//  } else {
+//    bodyAngle = 90;
+//  }
+//
+//  // ある角度以内なら真っ直ぐ，それ以外で右は右，左は左．
+//  if (bodyAngle < ANGLE_THRE) {
+//    direct = 0; //真っ直ぐ
+//  } else {
+//    if (bodyLon >= 0) {
+//      direct = 1; //右
+//    } else {
+//      direct = -1; //左
+//    }
+//  }
+//
+//  // モータの駆動
+//  if (direct == 0) {
+//    rightMotor.go(255);
+//    leftMotor.go(255);
+//  } else if (direct == 1) { //右
+//    rightMotor.go(255 * (1 - bodyAngle / 180));
+//    leftMotor.go(255);
+//  } else if (direct == -1) { //左
+//    rightMotor.go(255);
+//    leftMotor.go(255 * (1 - bodyAngle / 180));
+//  }
+//}
+//
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -339,25 +346,21 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 void Cansat::guidance2(float nowLat, float nowLon, float goalLat, float goalLon) {
   // Lon=経度=x
   // Lat=緯度=y
-  
 //////////////まずは自分のGPSの値　初期値を出します
-  if (countStraightLoop = 0) {
+  if (countStraightLoop == 0) {
     Lon1 = nowLon;
     Lat1 = nowLat;
   }
-
 //////////////その後とりあえずまっすぐ走ります
-  else if (countStraightLoop < 100) {
+  else if (countStraightLoop < 10) {
     rightMotor.go(255);
     leftMotor.go(255);
   }
-
 //////////////初期位置と動いた後の位置、動いた後の位置とゴールの位置の角度のずれから回転させます。
-  else if (100<countStraightLoop&&countStraightLoop <120) {
-    float Lon2 = nowLon;
-    float Lat2 = nowLat;
+  else if (10<countStraightLoop&&countStraightLoop <20 ) {
+      if(countStraightLoop==11) float Lon2 = nowLon;
+      if(countStraightLoop==11) float Lat2 = nowLat;
     //角度計算→回転→初期位置の更新
-
     //初期位置1と動いた後2のGPSの比較
     float deltaLon12 = Lon2 - Lon1;
     float deltaLat12 = Lat2 - Lat1;
@@ -375,20 +378,25 @@ void Cansat::guidance2(float nowLat, float nowLon, float goalLat, float goalLon)
      deg2g = atan(deltaLat12 / deltaLon12) * 180 / M_PI;
     }
     if (deltaLon2g < 0) {
-     deg2g = atan(deltaLat12 / deltaLon12) * 180 / M_PI; +180;
+     deg2g = atan(deltaLat12 / deltaLon12) * 180 / M_PI +180;
     }
     ////機体を回転させる
       if (deg12 > deg2g) { //左を上げる
-        rightMotor.go(255 * 0.8);
+        rightMotor.stop();
         leftMotor.go(255);
       } else if (deg2g > deg12) { //右を上げる
         rightMotor.go(255);
-        leftMotor.go(255 * 0.8);
+        leftMotor.stop();
       }
-      countStraightLoop = 0;
+  }
+  if(countStraightLoop==19){
+    countStraightLoop = 0;
+    
+
+    
+    }
   }
   countStraightLoop++;
-
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
 //void Cansat::sound_read() {

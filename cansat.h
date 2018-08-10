@@ -101,6 +101,8 @@ class Cansat {
 
     float Lon1=0;
     float Lat1=0;
+    float Lon2=0;
+    float Lat2=0;
     float deg12=0;
     float deg2g=0;
 
