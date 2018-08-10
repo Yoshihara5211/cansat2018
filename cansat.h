@@ -83,6 +83,7 @@ class Cansat {
     int countFlyLoop = 0;
     int countDropLoop = 0;
     int countReleasingLoop = 0;
+    int countRunning=0;
 
     int preparingTime = 0;
     int flyingTime = 0;

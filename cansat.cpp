@@ -33,14 +33,14 @@ void Cansat::setup() {
 
   // 水平にしてキャリブレーション
   digitalWrite(RED_LED_PIN, HIGH);
-  tone(BUZZER_PIN, 131, 1000);
+  tone(BUZZER_PIN, 131, 2000);
   acc.setupAcc();
   digitalWrite(RED_LED_PIN, LOW);
   Serial.println("Acc is ok");
 
   // roll,pitch,yawに回してキャリブレーション
   digitalWrite(BLUE_LED_PIN, HIGH);
-  tone(BUZZER_PIN, 523, 1000);
+  tone(BUZZER_PIN, 523, 2000);
   compass.setupCompass(0x02, 0x00);
   compass.calibration();
   digitalWrite(BLUE_LED_PIN, LOW);
@@ -142,12 +142,12 @@ void Cansat::sendXbee() {
                      + String(micb.maxvol) + ","
                      + String(direct) + ","
                      //+ String(round(15000 * 0.05 * exp(-0.05 * vol[0])))
-                     + String(distance2)
+                     + String(distance2) + ","
                      + "e";
   radio.sendData(send_data);
 }
 ///////////////////////////////////////////////////////////////////////////////////
-
+// 131 147 165 175 196 220 247
 // sequence関数
 ///////////////////////////////////////////////////////////////////////////////////
 void Cansat::sequence() {
@@ -165,8 +165,6 @@ void Cansat::sequence() {
       landing();
       break;
     case RUNNING:
-      digitalWrite(RELEASING1_PIN, LOW);
-      digitalWrite(RELEASING2_PIN, LOW);
       running();
       break;
     case GOAL:
@@ -189,7 +187,7 @@ void Cansat::preparing() {
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
     if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;
-    
+
   }
   else {
     countPreLoop = 0;
@@ -250,42 +248,50 @@ void Cansat::dropping() {
 void Cansat::landing() {
   if (landingTime == 0) {
     landingTime = millis();
+    //    tone(BUZZER_PIN, 523, 3000);
     digitalWrite(RED_LED_PIN, LOW);
     digitalWrite(BLUE_LED_PIN, LOW);
     digitalWrite(GREEN_LED_PIN, HIGH);
   }
   // 着地フェーズでは第2パラシュート分離を行う
   digitalWrite(RELEASING2_PIN, HIGH);
-//  countReleasingLoop++;
-//  if (landingTime != 0) {
-//    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
-//      digitalWrite(RELEASING2_PIN, LOW);
-//      state = RUNNING;
-//    }
-      if (landingTime != 0) {
-        if (millis() - landingTime > RELEASING2_TIME_THRE){
-          state = RUNNING;
-          analogWrite(RELEASING2_PIN, 0);
-        }
+  countReleasingLoop++;
+  if (landingTime != 0) {
+    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
+      digitalWrite(RELEASING2_PIN, LOW);
+      state = RUNNING;
     }
+    //  if (landingTime != 0) {
+    //    if (millis() - landingTime > RELEASING2_TIME_THRE ) {
+    //      state = RUNNING;
+    //      digitalWrite(RELEASING2_PIN, LOW);
+    //    }
+  }
 }
 
 // State = 4
 void Cansat::running() {
-   if (runningTime == 0) {
-    runningTime = millis();
+  if (runningTime == 0) {
     analogWrite(RELEASING2_PIN, 0);
-    digitalWrite(RED_LED_PIN, LOW);
-    digitalWrite(BLUE_LED_PIN, LOW);
-    digitalWrite(GREEN_LED_PIN, LOW);
+    runningTime = millis();
+    tone(BUZZER_PIN, 121, 2000);
+    analogWrite(RELEASING2_PIN, 0);
+    digitalWrite(RED_LED_PIN, HIGH);
+    digitalWrite(BLUE_LED_PIN, HIGH);
+    digitalWrite(GREEN_LED_PIN, HIGH);
   }
 
- 
-  if(millis()-runningTime<5000){
-      rightMotor.go(255);
-      leftMotor.go(255);
+  //  if (runningTime != 0) {
+  //    if (millis() - runningTime < 5000) {
+  //      rightMotor.go(255);
+  //      leftMotor.go(255);
+  //    }
+  countRunning++;
+  if (countRunning < 10) {
+    rightMotor.go(255);
+    leftMotor.go(255);
   }
-  else{
+  else {
     guidance3();
   }
   // GPS無しでは停止
@@ -301,6 +307,7 @@ void Cansat::running() {
   //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
   //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
   //  }
+//}
 }
 
 void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat) {
@@ -555,15 +562,16 @@ void Cansat::guidance3() {
     Serial.println("なんかバグってますよ");
     rightMotor.stop();
     leftMotor.stop();
-    
+
   }
-  distance2=round(15000 * 0.05 * exp(-0.05 * vol[0]));
-  if(vol[0]>70) state=GOAL;
+  distance2 = round(15000 * 0.05 * exp(-0.05 * vol[0]));
+  if (vol[0] > 70) state = GOAL;
 }
 
 
 // State = 5
 void Cansat::goal() {
+  // stopslowlyの同時駆動即が必要
   leftMotor.stop();
   rightMotor.stop();
   digitalWrite(RED_LED_PIN, HIGH); delay(100);
