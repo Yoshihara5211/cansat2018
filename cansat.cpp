@@ -256,24 +256,38 @@ void Cansat::landing() {
   }
   // 着地フェーズでは第2パラシュート分離を行う
   digitalWrite(RELEASING2_PIN, HIGH);
-  countReleasingLoop++;
-  if (landingTime != 0) {
-    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
-      digitalWrite(RELEASING2_PIN, LOW);
-      state = RUNNING;
+//  countReleasingLoop++;
+//  if (landingTime != 0) {
+//    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
+//      digitalWrite(RELEASING2_PIN, LOW);
+//      state = RUNNING;
+//    }
+      if (landingTime != 0) {
+        if (millis() - landingTime > RELEASING2_TIME_THRE){
+          state = RUNNING;
+          analogWrite(RELEASING2_PIN, 0);
+        }
     }
-    //  if (landingTime != 0) {
-    //    if (millis() - landingTime > RELEASING2_TIME_THRE) state = RUNNING;
-    //    digitalWrite(RELEASING2_PIN, LOW);
-  }
 }
 
 // State = 4
 void Cansat::running() {
-  digitalWrite(RELEASING2_PIN, LOW);
-  digitalWrite(RED_LED_PIN, LOW);
-  digitalWrite(BLUE_LED_PIN, LOW);
-  digitalWrite(GREEN_LED_PIN, LOW);
+   if (runningTime == 0) {
+    runningTime = millis();
+    analogWrite(RELEASING2_PIN, 0);
+    digitalWrite(RED_LED_PIN, LOW);
+    digitalWrite(BLUE_LED_PIN, LOW);
+    digitalWrite(GREEN_LED_PIN, LOW);
+  }
+
+ 
+  if(millis()-runningTime<5000){
+      rightMotor.go(255);
+      leftMotor.go(255);
+  }
+  else{
+    guidance3();
+  }
   // GPS無しでは停止
   //  if (gps.lat < 1 && gps.lon < 1) {
   //    leftMotor.stop();
@@ -284,7 +298,6 @@ void Cansat::running() {
   //      runningTime = millis();
   //    }
   // 走行フェーズではガイダンス則に従う
-  guidance3();
   //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
   //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
   //  }
@@ -540,6 +553,9 @@ void Cansat::guidance3() {
   }
   else {
     Serial.println("なんかバグってますよ");
+    rightMotor.stop();
+    leftMotor.stop();
+    
   }
   distance2=round(15000 * 0.05 * exp(-0.05 * vol[0]));
   if(vol[0]>70) state=GOAL;
