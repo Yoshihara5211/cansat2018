@@ -118,7 +118,8 @@ void Cansat::writeSd() {
                     + String(micb.maxfreq) + ", "
                     + String(micb.maxvol) + ", "
                     + String(direct) + ","
-                    + String(distance2);
+                    + String(distance2)+ ","
+                    + String(millis() - landingTime);
   sd.printSd(log_data);
 }
 
@@ -143,6 +144,7 @@ void Cansat::sendXbee() {
                      + String(direct) + ","
                      //+ String(round(15000 * 0.05 * exp(-0.05 * vol[0])))
                      + String(distance2) + ","
+                     + String(millis() - landingTime) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -257,15 +259,16 @@ void Cansat::landing() {
   digitalWrite(RELEASING2_PIN, HIGH);
   countReleasingLoop++;
   if (landingTime != 0) {
-    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
-      digitalWrite(RELEASING2_PIN, LOW);
-      state = RUNNING;
-    }
-    //  if (landingTime != 0) {
-    //    if (millis() - landingTime > RELEASING2_TIME_THRE ) {
-    //      state = RUNNING;
+    //    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
     //      digitalWrite(RELEASING2_PIN, LOW);
+    //      state = RUNNING;
     //    }
+    if (landingTime != 0) {
+      if (millis() - landingTime > RELEASING2_TIME_THRE ) {
+        state = RUNNING;
+        digitalWrite(RELEASING2_PIN, LOW);
+      }
+    }
   }
 }
 
@@ -307,7 +310,7 @@ void Cansat::running() {
   //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
   //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
   //  }
-//}
+  //}
 }
 
 void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat) {
@@ -395,74 +398,15 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 //    leftMotor.go(255 * 0.8);
 //  }
 //}
-///////////////////////////////////////////////////////////////////////////////////////////
-//void Cansat::sound_read() {
-//    // ここでどのマイクがどの高さの音をどの程度の大きさで拾っているのかを判定している
-//  mic1.FFT();
-//  mic2.FFT();
-//  mic3.FFT();
-//  mic4.FFT();
-//  mic1.soundRead();
-//  mic2.soundRead();
-//  mic3.soundRead();
-//  mic4.soundRead();
-//
-//  vol[4] = {mic1.maxvol, mic2.maxvol, mic3.maxvol, mic4.maxvol}; // 各マイクが拾った音の大きさ
-//  freq[4] = {mic1.maxfreq, mic2.maxfreq, mic3.maxfreq, mic4.maxfreq}; //各マイクが拾った音の高さ
-//  number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
-//  // 並び替え(バブルソート)→音が大きい順にvol,freq,numberを並び替える
-//  int i, j, temp;
-//  for (i = 0; i < 3; i++) {
-//    for (j = 3; j > i; j--) {
-//      if (vol[j - 1] < vol[j]) {
-//        temp = vol[j - 1];
-//        vol[j - 1] = vol[j];
-//        vol[j] = temp;
-//        temp = freq[j - 1];
-//        freq[j - 1] = freq[j];
-//        freq[j] = temp;
-//        temp = number[j - 1];
-//        number[j - 1] = number[j];
-//        number[j] = temp;
-//      }
-//    }
-//  }
-//
-//  // 以下三行は場合によっては不要
-//  maxvol=vol[0];
-//  maxfreq=freq[0];
-//  maxnumber=number[0]
-//}
-///////////////////////////////////////////////////////////////////////////////////////////
-//// 地磁気センサ＋マイクのアルゴリズム
-//void Cansat::guidance3() {
-//
-//  sound_read();
-//
-//  if (maxvol < 5) {
-//    // sound_read()で音が取れてないときの例外処理
-//  }
-//  // この後cansatに東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
-//}
-//
-///////////////////////////////////////////////////////////////////////////////////////////
-//// 地磁気センサなしでの走行アルゴリズム
-//void Cansat::guidance4() {
-//
-//  sound_read();
-//
-//  if (maxvol < 5) {
-//    // sound_read()で音が取れてないときの例外処理
-//  }
-//  // この後cansatに東西南北8方向を検知させ、地磁気センサの値と合わせて音源へと向かわせる
-//}
 
-void Cansat::guidance3() {
-  // ここからは書き換えたもの//////////////////////////////////////////////////////////////////////
-  int vol[4] = {micf.maxvol, micr.maxvol, micb.maxvol, micl.maxvol}; // 各マイクが拾った音の大きさ
-  int freq[4] = {micf.maxfreq, micr.maxfreq, micb.maxfreq, micl.maxfreq}; //各マイクが拾った音の高さ
-  int number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
 
+/////////////////////////////////////////////////////////////////////////////////////////
+///**
+//  @void guidance3
+//  @author Tomiyoshi
+//  @date Created: 20180811
+
+void Cansat::sort(int vol[4], int freq[4], int number[4]) {
   // 並び替え(バブルソート)→音が大きい順にvol,freq,numberを並び替える
   int i, j, temp;
   for (i = 0; i < 3; i++) {
@@ -480,6 +424,32 @@ void Cansat::guidance3() {
       }
     }
   }
+}
+
+void Cansat::guidance3() {
+  int vol[4] = {micf.maxvol, micr.maxvol, micb.maxvol, micl.maxvol}; // 各マイクが拾った音の大きさ
+  int freq[4] = {micf.maxfreq, micr.maxfreq, micb.maxfreq, micl.maxfreq}; //各マイクが拾った音の高さ
+  int number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
+
+  // 並び替え(バブルソート)→音が大きい順にvol,freq,numberを並び替える
+
+  sort(vol, freq, number);
+  //  int i, j, temp;
+  //  for (i = 0; i < 3; i++) {
+  //    for (j = 3; j > i; j--) {
+  //      if (vol[j - 1] < vol[j]) {
+  //        temp = vol[j - 1];
+  //        vol[j - 1] = vol[j];
+  //        vol[j] = temp;
+  //        temp = freq[j - 1];
+  //        freq[j - 1] = freq[j];
+  //        freq[j] = temp;
+  //        temp = number[j - 1];
+  //        number[j - 1] = number[j];
+  //        number[j] = temp;
+  //      }
+  //    }
+  //  }
 
   //　向き判定
   if (vol[0] < 5) {

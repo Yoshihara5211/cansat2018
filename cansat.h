@@ -50,8 +50,6 @@ class Cansat {
     void sequence();  // シーケンス制御(シーケンス関数を回す
 
 
-
-
     // setup()構成関数
     void setGoal(float lon, float lat);  // ゴール座標設定関数
 
@@ -69,6 +67,7 @@ class Cansat {
     void guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat);
     //    void guidance2(float nowLat, float nowLon, float goalLat, float goalLon);
         void guidance3();
+        void sort(int vol[4],int freq[4],int number[4]);
     //    void guidance4();
     //////////////
     void goal();
@@ -85,12 +84,12 @@ class Cansat {
     int countReleasingLoop = 0;
     int countRunning=0;
 
-    int preparingTime = 0;
-    int flyingTime = 0;
-    int droppingTime = 0;
-    int landingTime = 0;
-    int runningTime = 0;
-    int stuckingTime = 0;
+    unsigned long preparingTime = 0;
+    unsigned long flyingTime = 0;
+    unsigned long droppingTime = 0;
+    unsigned long landingTime = 0;
+    unsigned long runningTime = 0;
+    unsigned long stuckingTime = 0;
 
     float deltaLon = 0;
     float deltaLat = 0;
