@@ -118,7 +118,7 @@ void Cansat::writeSd() {
                     + String(micb.maxfreq) + ", "
                     + String(micb.maxvol) + ", "
                     + String(direct) + ","
-                    + String(distance2)+ ","
+                    + String(distance2) + ","
                     + String(millis() - landingTime);
   sd.printSd(log_data);
 }
@@ -295,7 +295,8 @@ void Cansat::running() {
     leftMotor.go(255);
   }
   else {
-    guidance3();
+    //    guidance3();
+    guidance4();
   }
   // GPS無しでは停止
   //  if (gps.lat < 1 && gps.lon < 1) {
@@ -432,70 +433,53 @@ void Cansat::guidance3() {
   int number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
 
   // 並び替え(バブルソート)→音が大きい順にvol,freq,numberを並び替える
-
   sort(vol, freq, number);
-  //  int i, j, temp;
-  //  for (i = 0; i < 3; i++) {
-  //    for (j = 3; j > i; j--) {
-  //      if (vol[j - 1] < vol[j]) {
-  //        temp = vol[j - 1];
-  //        vol[j - 1] = vol[j];
-  //        vol[j] = temp;
-  //        temp = freq[j - 1];
-  //        freq[j - 1] = freq[j];
-  //        freq[j] = temp;
-  //        temp = number[j - 1];
-  //        number[j - 1] = number[j];
-  //        number[j] = temp;
-  //      }
-  //    }
-  //  }
 
   //　向き判定
   if (vol[0] < 5) {
     vol[0] = 0;
     freq[0] = 0;
-    direct = 0;
+    direct2 = 0;
   }
   else if (vol[0] > 5) {
     if ((float)vol[0] / (float)vol[1] > 1.3) {
-      direct = 2 * number[0] - 1;
+      direct2 = 2 * number[0] - 1;
     }
     else if ((number[0] == 1 && number[1] == 2) || (number[0] == 2 && number[1] == 1)) {
-      direct = 2;
+      direct2 = 2;
     }
     else if ((number[0] == 2 && number[1] == 3) || (number[0] == 3 && number[1] == 2)) {
-      direct = 4;
+      direct2 = 4;
     }
     else if ((number[0] == 3 && number[1] == 4) || (number[0] == 4 && number[1] == 3)) {
-      direct = 6;
+      direct2 = 6;
     }
     else if ((number[0] == 4 && number[1] == 1) || (number[0] == 1 && number[1] == 4)) {
-      direct = 8;
+      direct2 = 8;
     } else {
-      direct = 9; // なんかバグってます
+      direct2 = 9; // なんかバグってます
     }
   } else {
-    direct = 2 * number[0] - 1;
+    direct2 = 2 * number[0] - 1;
   }
 
   //モーター系
-  if (direct == 0) {
+  if (direct2 == 0) {
     Serial.println("No sound detected");
     rightMotor.stop();
     leftMotor.stop();
   }
-  else if (direct == 1) {
+  else if (direct2 == 1) {
     Serial.println("front");
     rightMotor.go(255);
     leftMotor.go(255);
   }
-  else if (direct == 2) {
+  else if (direct2 == 2) {
     Serial.println("front/right");
     rightMotor.go(122.5);
     leftMotor.go(255);
   }
-  else if (direct == 3) {
+  else if (direct2 == 3) {
     Serial.println("right");
     rightMotor.stop();
     leftMotor.go(255);
@@ -506,24 +490,24 @@ void Cansat::guidance3() {
     rightMotor.stop();
     leftMotor.go(255);
   }
-  else if (direct == 5) {
+  else if (direct2 == 5) {
     Serial.println("back");
     // rightMotor.back(255);
     rightMotor.stop();
     leftMotor.go(255);
   }
-  else if (direct == 6) {
+  else if (direct2 == 6) {
     Serial.println("left/back");
     rightMotor.go(255);
     leftMotor.stop();
     //  leftMotor.back(122.5);
   }
-  else if (direct == 7) {
+  else if (direct2 == 7) {
     Serial.println("left");
     rightMotor.go(255);
     leftMotor.stop();
   }
-  else if (direct == 8) {
+  else if (direct2 == 8) {
     Serial.println("front/left");
     rightMotor.go(255);
     leftMotor.go(122.5);
@@ -538,6 +522,129 @@ void Cansat::guidance3() {
   if (vol[0] > 70) state = GOAL;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+///**
+//  @void guidance4
+//  @author Tomiyoshi
+//  @date Created: 20180812
+
+void Cansat::guidance4running(float nowDeg, float directDeg) {
+
+  if (nowDeg < 0) {
+    directAngle = directDeg - (nowDeg + 360);
+  } else {
+    directAngle = directDeg - nowDeg;
+  }
+
+  if (directAngle < -180) {
+    directAngle = directAngle + 360;
+  }
+
+  if (directAngle > 180) {
+    directAngle = directAngle - 360;
+  }
+
+  if (directAngle < (ANGLE_THRE - 10) && directAngle > -(ANGLE_THRE - 10)) {
+    direct = 0; //真っ直ぐ
+  } else {
+    if (directAngle >= 0) {
+      direct = 1; //右
+    } else {
+      direct = -1; //左
+    }
+  }
+
+  // モータの駆動
+  if (direct == 0) {
+    rightMotor.go(255);
+    leftMotor.go(255);
+  } else if (direct == 1) { //右
+    rightMotor.go(255 * (1 - directAngle / 180));
+    leftMotor.go(255);
+  } else if (direct == -1) { //左
+    rightMotor.go(255);
+    leftMotor.go(255 * (1 + directAngle / 180));
+  }
+}
+
+void Cansat::guidance4() {
+  // ループ開始時刻保存
+  if (guidance4Time == 0) {
+    guidance4Time = millis();
+  }
+  if (guidance4Time != 0) {
+    int vol[4] = {micf.maxvol, micr.maxvol, micb.maxvol, micl.maxvol}; // 各マイクが拾った音の大きさ
+    int freq[4] = {micf.maxfreq, micr.maxfreq, micb.maxfreq, micl.maxfreq}; //各マイクが拾った音の高さ
+    int number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
+
+    sort(vol, freq, number);
+
+    // ゴール判定は毎ループやる
+    if (vol[0] > 70)state = GOAL;
+
+    if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
+      // 一定時間停止し、どの高さの音が一番大きく聞こえたかを判定
+
+      if (vol[0] < 5) {
+        vol[0] = 0;
+        freq[0] = 0;
+      }
+
+      if (vol[0] > soundvol) {
+        soundvol = vol[0];
+        soundfreq = freq[0];
+      }
+    }
+    else if (millis() - guidance4Time < GUIDANCE4_TIME_THRE + GUIDANCE4_TIME_THRE2) {
+      // 向き、距離決定→走行
+      if (countGuidance4Loop == 0) {
+        distance2 = round(15000 * 0.05 * exp(-0.05 * soundvol));
+        direct2 = soundfreq - N; // Nはこちらが任意で決める値
+        if(soundvol==0){
+          guidance4Time=0;
+        }else{
+          countGuidance4Loop++;
+        }
+      }
+      else {
+        directDeg = 45 * (direct2 - 1); // 8方向検知、0は真北？
+        //        switch (direct2) {
+        //          case 1:
+        //            break;
+        //          case 2:
+        //            break;
+        //          case 3:
+        //            break;
+        //          case 4:
+        //            break;
+        //          case 5:
+        //            break;
+        //          case 6:
+        //            break;
+        //          case 7:
+        //            break;
+        //          case 8:
+        //            break;
+        //        }
+        // ここに引数を「機体の現在の向き、機体の向かいたい向き」としたモータ制御関数を入れる
+        // guidance1()を参考に書く
+        // soundvolの大きさによって速度を変えるのも面白いかも
+        guidance4running(compass.deg, directDeg);
+      }
+    }
+    else {
+      // ここまでで1セット、各数値を初期化
+      guidance4Time = 0;
+      countGuidance4Loop = 0;
+      soundvol = 0;
+      soundfreq = 0;
+      direct2 = 0;
+      distance2 = 0;
+      rightMotor.stop();
+      leftMotor.stop();
+    }
+  }
+}
 
 // State = 5
 void Cansat::goal() {

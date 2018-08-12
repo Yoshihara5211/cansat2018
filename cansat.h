@@ -66,9 +66,10 @@ class Cansat {
     ////////////// running()構成関数
     void guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat);
     //    void guidance2(float nowLat, float nowLon, float goalLat, float goalLon);
-        void guidance3();
-        void sort(int vol[4],int freq[4],int number[4]);
-    //    void guidance4();
+    void guidance3();
+    void sort(int vol[4], int freq[4], int number[4]);
+    void guidance4();
+    void guidance4running(float nowDeg,float directDeg);
     //////////////
     void goal();
 
@@ -82,7 +83,8 @@ class Cansat {
     int countFlyLoop = 0;
     int countDropLoop = 0;
     int countReleasingLoop = 0;
-    int countRunning=0;
+    int countRunning = 0;
+    int countGuidance4Loop = 0;
 
     unsigned long preparingTime = 0;
     unsigned long flyingTime = 0;
@@ -90,6 +92,9 @@ class Cansat {
     unsigned long landingTime = 0;
     unsigned long runningTime = 0;
     unsigned long stuckingTime = 0;
+    unsigned long guidance4Time = 0;
+
+
 
     float deltaLon = 0;
     float deltaLat = 0;
@@ -98,7 +103,14 @@ class Cansat {
     float bodyLat = 0;
     int bodyAngle = 0;
     int direct = 0;
+
+//guidance3,4用変数
+    int soundvol = 0;
+    int soundfreq = 0;
     float distance2;
+    int direct2=0;
+    float directDeg;
+    float directAngle;
 };
 
 #endif
