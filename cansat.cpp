@@ -117,9 +117,9 @@ void Cansat::writeSd() {
                     + String(micl.maxvol) + ", "
                     + String(micb.maxfreq) + ", "
                     + String(micb.maxvol) + ", "
-                    + String(direct) + ","
+                    + String(direct2) + ","
                     + String(distance2) + ","
-                    + String(millis() - landingTime);
+                    + String(direct);
   sd.printSd(log_data);
 }
 
@@ -141,10 +141,10 @@ void Cansat::sendXbee() {
                      + String(micl.maxvol) + ","
                      + String(micb.maxfreq) + ","
                      + String(micb.maxvol) + ","
-                     + String(direct) + ","
+                     + String(direct2) + ","
                      //+ String(round(15000 * 0.05 * exp(-0.05 * vol[0])))
                      + String(distance2) + ","
-                     + String(millis() - landingTime) + ","
+                     + String(direct) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -296,7 +296,7 @@ void Cansat::running() {
   }
   else {
     //    guidance3();
-    guidance4();
+        guidance4();
   }
   // GPS無しでは停止
   //  if (gps.lat < 1 && gps.lon < 1) {
@@ -570,6 +570,8 @@ void Cansat::guidance4running(float nowDeg, float directDeg) {
 void Cansat::guidance4() {
   // ループ開始時刻保存
   if (guidance4Time == 0) {
+    rightMotor.stop();
+    leftMotor.stop();
     guidance4Time = millis();
   }
   if (guidance4Time != 0) {
@@ -595,7 +597,7 @@ void Cansat::guidance4() {
         soundfreq = freq[0];
       }
     }
-    else if (millis() - guidance4Time < GUIDANCE4_TIME_THRE + GUIDANCE4_TIME_THRE2) {
+    else if (millis() - guidance4Time < (GUIDANCE4_TIME_THRE + GUIDANCE4_TIME_THRE2)) {
       // 向き、距離決定→走行
       if (countGuidance4Loop == 0) {
         distance2 = round(15000 * 0.05 * exp(-0.05 * soundvol));
@@ -632,7 +634,8 @@ void Cansat::guidance4() {
         guidance4running(compass.deg, directDeg);
       }
     }
-    else {
+    
+    if (millis() - guidance4Time > (GUIDANCE4_TIME_THRE + GUIDANCE4_TIME_THRE2)){
       // ここまでで1セット、各数値を初期化
       guidance4Time = 0;
       countGuidance4Loop = 0;
