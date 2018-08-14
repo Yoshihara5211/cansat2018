@@ -144,7 +144,7 @@ void Cansat::sendXbee() {
                      + String(direct2) + ","
                      //+ String(round(15000 * 0.05 * exp(-0.05 * vol[0])))
                      + String(distance2) + ","
-                     + String(direct) + ","
+                     + String(millis() - guidance4Time) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -366,40 +366,6 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 //  @author Kosuge
 //  @date Created: 20170529
 //*/
-//void Cansat::guidance2(float nowLat, float nowLon, float goalLat, float goalLon) {
-//  // Lon=経度=x
-//  // Lat=緯度=y
-//  ////自分のGPSの値　初期値
-//  float Lon1 = nowLon;
-//  float Lat1 = nowLat;
-//  ////モータの駆動
-//t1 =millis();
-//  if(millis()-t1<10000){
-//  rightMotor.go(255);
-//  leftMotor.go(255);
-//}else{
-//break;
-//}
-//  ////動いた後のGPSの値
-//  float Lon2 = gps.lon
-//               float Lat2 = gps.lat;
-//  float xvel2g = (goalLon - Lon2) / sqrt(pow(goalLon - Lon2, 2) + pow(goalLat - Lat2, 2));
-//  float yvel2g = (goalLat - Lat2) / sqrt(pow(goalLon - Lon2, 2) + pow(goalLat - Lat2, 2));
-//  float deg2g = atan(yvel2g / xvel2g);
-//  float xvel12 = (Lon2 - Lon1)sqrt(pow(goalLon - Lon2, 2) + pow(goalLat - Lat2, 2));
-//  float yvel12 = (Lat2 - Lat1)sqrt(pow(goalLon - Lon2, 2) + pow(goalLat - Lat2, 2));
-//  float deg12 = atan(yvel12 / xvel12);
-//
-//  ////モータの駆動
-//  if (deg12 > deg2g) { //左を上げる
-//    rightMotor.go(255 * 0.8);
-//    leftMotor.go(255);
-//  } else if (deg2g > deg12) { //右を上げる
-//    rightMotor.go(255);
-//    leftMotor.go(255 * 0.8);
-//  }
-//}
-
 
 /////////////////////////////////////////////////////////////////////////////////////////
 ///**
@@ -584,6 +550,8 @@ void Cansat::guidance4() {
     // ゴール判定は毎ループやる
     if (vol[0] > 70)state = GOAL;
 
+     unsigned long GUIDANCE4_TIME_THRE2=37000;
+        
     if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
       // 一定時間停止し、どの高さの音が一番大きく聞こえたかを判定
 
@@ -597,7 +565,7 @@ void Cansat::guidance4() {
         soundfreq = freq[0];
       }
     }
-    else if (millis() - guidance4Time < (GUIDANCE4_TIME_THRE + GUIDANCE4_TIME_THRE2)) {
+    else if (millis() - guidance4Time < GUIDANCE4_TIME_THRE2) {
       // 向き、距離決定→走行
       if (countGuidance4Loop == 0) {
         distance2 = round(15000 * 0.05 * exp(-0.05 * soundvol));
@@ -635,7 +603,7 @@ void Cansat::guidance4() {
       }
     }
     
-    if (millis() - guidance4Time > (GUIDANCE4_TIME_THRE + GUIDANCE4_TIME_THRE2)){
+    if (millis() - guidance4Time > GUIDANCE4_TIME_THRE2){
       // ここまでで1セット、各数値を初期化
       guidance4Time = 0;
       countGuidance4Loop = 0;
