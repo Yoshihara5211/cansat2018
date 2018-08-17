@@ -18,8 +18,9 @@ Cansat::~Cansat() {
 // setup関数
 ///////////////////////////////////////////////////////////////////////////////////
 void Cansat::setup() {
-  setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
-
+  // setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
+  setGoal(4014236.80, 13998730.00);  // ゴール設定(能代)
+  
   Serial.begin(9600);
 
   sd.setupSd();
@@ -536,6 +537,9 @@ void Cansat::guidance4running(float nowDeg, float directDeg) {
 void Cansat::guidance4() {
   // ループ開始時刻保存
   if (guidance4Time == 0) {
+    digitalWrite(RED_LED_PIN, HIGH);
+    digitalWrite(BLUE_LED_PIN, HIGH);
+    digitalWrite(GREEN_LED_PIN, HIGH);
     rightMotor.stop();
     leftMotor.stop();
     guidance4Time = millis();
@@ -550,15 +554,20 @@ void Cansat::guidance4() {
     // ゴール判定は毎ループやる
     if (vol[0] > 70)state = GOAL;
 
-     unsigned long GUIDANCE4_TIME_THRE2=37000;
+     unsigned long GUIDANCE4_TIME_THRE2=40000;
         
     if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
       // 一定時間停止し、どの高さの音が一番大きく聞こえたかを判定
 
+      if(freq[0]<N+1||N+8<freq[0]){
+        vol[0]=0;
+      }
+      
       if (vol[0] < 5) {
         vol[0] = 0;
         freq[0] = 0;
       }
+      
 
       if (vol[0] > soundvol) {
         soundvol = vol[0];
@@ -568,6 +577,9 @@ void Cansat::guidance4() {
     else if (millis() - guidance4Time < GUIDANCE4_TIME_THRE2) {
       // 向き、距離決定→走行
       if (countGuidance4Loop == 0) {
+        digitalWrite(RED_LED_PIN, LOW);
+        digitalWrite(BLUE_LED_PIN, LOW);
+        digitalWrite(GREEN_LED_PIN, LOW);
         distance2 = round(15000 * 0.05 * exp(-0.05 * soundvol));
         direct2 = soundfreq - N; // Nはこちらが任意で決める値
         if(soundvol==0){

@@ -21,7 +21,7 @@ void Compass::calibration() {
   y_min = 20000;
   z_max = -20000000;
   z_min = 20000000;
-  for (int i = 0; i < 5000; i++) {
+  for (int i = 0; i < 8000; i++) {
     Wire.end();
     Wire.begin();
     // delay(250);                            //WAIT DATA SET TIME
