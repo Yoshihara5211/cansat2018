@@ -191,8 +191,8 @@ void Cansat::preparing() {
   // 加速度から格納検知
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
-    //        if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;
-    state = RUNNING;//Test用
+            if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
+//    state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
 
   }
   else {
@@ -556,7 +556,7 @@ void Cansat::guidance4() {
     sort(vol, freq, number);
 
     // ゴール判定は毎ループやる
-    if (vol[0] > 70)state = GOAL;
+    if (vol[0] > 60)state = GOAL;//ここのifの条件式の数字をいじることで閾値を変更可能
 
 //    unsigned long GUIDANCE4_TIME_THRE2 = 40000;
     unsigned long GUIDANCE4_TIME_THRE2 = 18000;//テスト用
