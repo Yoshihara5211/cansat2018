@@ -15,12 +15,12 @@ void Compass::setupCompass(unsigned char REG_ADR, unsigned char DATA) {
 
 void Compass::calibration() {
   x = y = z = 0;
-  x_max = -20000000;
-  x_min = 20000000;
-  y_max = -200000;
+  x_max = -20000;
+  x_min = 20000;
+  y_max = -20000;
   y_min = 20000;
-  z_max = -20000000;
-  z_min = 20000000;
+  z_max = -20000;
+  z_min = 20000;
   for (int i = 0; i < 8000; i++) {
     Wire.end();
     Wire.begin();

@@ -20,7 +20,7 @@ Cansat::~Cansat() {
 void Cansat::setup() {
   // setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
   setGoal(4014236.80, 13998730.00);  // ゴール設定(能代)
-  
+
   Serial.begin(9600);
 
   sd.setupSd();
@@ -120,7 +120,8 @@ void Cansat::writeSd() {
                     + String(micb.maxvol) + ", "
                     + String(direct2) + ","
                     + String(distance2) + ","
-                    + String(direct);
+                    + String(soundvol) + ","
+                    + String(millis() - guidance4Time);
   sd.printSd(log_data);
 }
 
@@ -145,6 +146,7 @@ void Cansat::sendXbee() {
                      + String(direct2) + ","
                      //+ String(round(15000 * 0.05 * exp(-0.05 * vol[0])))
                      + String(distance2) + ","
+                     + String(soundvol) + ","
                      + String(millis() - guidance4Time) + ","
                      + "e";
   radio.sendData(send_data);
@@ -189,7 +191,8 @@ void Cansat::preparing() {
   // 加速度から格納検知
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
-    if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;
+    //        if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;
+    state = RUNNING;//Test用
 
   }
   else {
@@ -227,12 +230,12 @@ void Cansat::dropping() {
     digitalWrite(GREEN_LED_PIN, LOW);
   }
   // 落下フェーズでは第1パラシュート分離を行う
-  //  if (landingTime != 0) {
-  //    if (millis() - landingTime > RELEASING1_TIME_THRE) digitalWrite(RELEASING1_PIN, HIGH);
-  //  }
-  //  if (landingTime != 0) {
-  //    if (millis() - landingTime > RELEASING1_TIME2_THRE) digitalWrite(RELEASING1_PIN, LOW);
-  //  }
+  //    if (droppingTime != 0) {
+  //      if (millis() - landingTime > RELEASING1_TIME_THRE) digitalWrite(RELEASING1_PIN, HIGH);
+  //    }
+  //    if (droppingTime != 0) {
+  //      if (millis() - landingTime > RELEASING1_TIME2_THRE) digitalWrite(RELEASING1_PIN, LOW);
+  //    }
   // 加速度から着地検知
   if ((pow(acc.ax, 2) + pow(acc.ay, 2) + pow(acc.az, 2)) < pow(ACC_THRE, 2)) {
     countDropLoop++;
@@ -259,16 +262,15 @@ void Cansat::landing() {
   // 着地フェーズでは第2パラシュート分離を行う
   digitalWrite(RELEASING2_PIN, HIGH);
   countReleasingLoop++;
+  //  if (landingTime != 0) {
+  //    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
+  //      digitalWrite(RELEASING2_PIN, LOW);
+  //      state = RUNNING;
+  //    }
   if (landingTime != 0) {
-    //    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
-    //      digitalWrite(RELEASING2_PIN, LOW);
-    //      state = RUNNING;
-    //    }
-    if (landingTime != 0) {
-      if (millis() - landingTime > RELEASING2_TIME_THRE ) {
-        state = RUNNING;
-        digitalWrite(RELEASING2_PIN, LOW);
-      }
+    if (millis() - landingTime > RELEASING2_TIME_THRE ) {
+      state = RUNNING;
+      digitalWrite(RELEASING2_PIN, LOW);
     }
   }
 }
@@ -286,18 +288,19 @@ void Cansat::running() {
   }
 
   //  if (runningTime != 0) {
-  //    if (millis() - runningTime < 5000) {
+  //    if (millis() - runningTime < 10000) {
   //      rightMotor.go(255);
   //      leftMotor.go(255);
   //    }
+
   countRunning++;
-  if (countRunning < 10) {
+  if (countRunning < 15) {
     rightMotor.go(255);
     leftMotor.go(255);
   }
   else {
     //    guidance3();
-        guidance4();
+    guidance4();
   }
   // GPS無しでは停止
   //  if (gps.lat < 1 && gps.lon < 1) {
@@ -314,6 +317,7 @@ void Cansat::running() {
   //  }
   //}
 }
+
 
 void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, float goalLat) {
   // Lon=経度=x
@@ -554,20 +558,21 @@ void Cansat::guidance4() {
     // ゴール判定は毎ループやる
     if (vol[0] > 70)state = GOAL;
 
-     unsigned long GUIDANCE4_TIME_THRE2=40000;
-        
+//    unsigned long GUIDANCE4_TIME_THRE2 = 40000;
+    unsigned long GUIDANCE4_TIME_THRE2 = 18000;//テスト用
+
     if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
       // 一定時間停止し、どの高さの音が一番大きく聞こえたかを判定
 
-      if(freq[0]<N+1||N+8<freq[0]){
-        vol[0]=0;
+      if (freq[0] < N + 1 || N + 8 < freq[0]) {
+        vol[0] = 0;
       }
-      
+
       if (vol[0] < 5) {
         vol[0] = 0;
         freq[0] = 0;
       }
-      
+
 
       if (vol[0] > soundvol) {
         soundvol = vol[0];
@@ -582,9 +587,9 @@ void Cansat::guidance4() {
         digitalWrite(GREEN_LED_PIN, LOW);
         distance2 = round(15000 * 0.05 * exp(-0.05 * soundvol));
         direct2 = soundfreq - N; // Nはこちらが任意で決める値
-        if(soundvol==0){
-          guidance4Time=0;
-        }else{
+        if (soundvol == 0) {
+          guidance4Time = 0;
+        } else {
           countGuidance4Loop++;
         }
       }
@@ -614,8 +619,8 @@ void Cansat::guidance4() {
         guidance4running(compass.deg, directDeg);
       }
     }
-    
-    if (millis() - guidance4Time > GUIDANCE4_TIME_THRE2){
+
+    if (millis() - guidance4Time > GUIDANCE4_TIME_THRE2) {
       // ここまでで1セット、各数値を初期化
       guidance4Time = 0;
       countGuidance4Loop = 0;
