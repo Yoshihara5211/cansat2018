@@ -18,8 +18,8 @@ Cansat::~Cansat() {
 // setup関数
 ///////////////////////////////////////////////////////////////////////////////////
 void Cansat::setup() {
-  // setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
-  setGoal(4014236.80, 13998730.00);  // ゴール設定(能代)
+  setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
+  //setGoal(4014236.80, 13998730.00);  // ゴール設定(能代)
 
   Serial.begin(9600);
 
@@ -148,6 +148,9 @@ void Cansat::sendXbee() {
                      + String(distance2) + ","
                      + String(soundvol) + ","
                      + String(millis() - guidance4Time) + ","
+                     + String(millis() - guidance2Time) + ","
+                     + String(millis() - guidance2STime) + ","
+                     + String(direct) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -191,8 +194,8 @@ void Cansat::preparing() {
   // 加速度から格納検知
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
-            if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
-//    state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
+    //if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
+    state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
 
   }
   else {
@@ -293,15 +296,22 @@ void Cansat::running() {
   //      leftMotor.go(255);
   //    }
 
+    if (gps.lat < 1 && gps.lon < 1) {
+      leftMotor.stop();
+      rightMotor.stop();
+    }
+    else {
   countRunning++;
   if (countRunning < 15) {
     rightMotor.go(255);
     leftMotor.go(255);
   }
   else {
+    guidance2(gps.lon, gps.lat, destLon, destLat);
     //    guidance3();
-    guidance4();
+    //guidance4();
   }
+  
   // GPS無しでは停止
   //  if (gps.lat < 1 && gps.lon < 1) {
   //    leftMotor.stop();
@@ -371,6 +381,78 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
 //  @author Kosuge
 //  @date Created: 20170529
 //*/
+void Cansat::guidance2(float nowLon, float nowLat, float goalLon, float goalLat) {
+  // ループ開始時刻保存
+  //現在の位置を測定
+  if (guidance2Time == 0) {
+    rightMotor.stop();
+    leftMotor.stop();
+    Lon1 = nowLon;
+    Lat1 = nowLat;
+    guidance2Time = millis();
+  }
+  //とりあえず10秒間まっすぐ走る
+  if (0 < millis() - guidance2Time && millis() - guidance2Time < 10000) {
+    rightMotor.go(255);
+    leftMotor.go(255);
+  }
+  //機体の向きを補正しながら走行
+  else if (10000 < millis() - guidance2Time) {
+    //1ループ目は走行前後のGPS値から機体の向きを計算
+    if (guidance2STime == 0) {
+      Lon2 = nowLon;
+      Lat2 = nowLat;
+      deltaLon12 = (Lon2 - Lon1);
+      deltaLat12 = (Lat2 - Lat1);
+      distance12 = sqrt(pow(deltaLat12, 2) + pow(deltaLon12, 2));
+      //走行した前後から機体の向きを計算(地磁気の代わりをする)
+      if (deltaLon12 > 0) {
+        deg12 = fabs(atan2(deltaLon12, deltaLat12)) * 180 / M_PI;
+      } else if (deltaLon12 < 0) {
+        deg12 = 180 + fabs(atan2(deltaLon12, deltaLat12)) * 180 / M_PI;
+      }
+      // 機体座標系でのゴールまでの角度を計算
+      deltaLon2g = (goalLon - nowLon);
+      deltaLat2g = (goalLat - nowLat);
+      distance2g = sqrt(pow(deltaLat2g, 2) + pow(deltaLon2g, 2));
+      bodyLon = deltaLon2g * cos(deg12 / 180 * M_PI) + deltaLat2g * sin(deg12 / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
+      bodyLat = deltaLon2g * sin(deg12 / 180 * M_PI) + deltaLat2g * cos(deg12 / 180 * M_PI); // [y']   [-sin(th)    cos(th)] [y]
+      if (bodyLat > 0) {
+        bodyAngle = fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
+      } else if (bodyLat < 0) {
+        bodyAngle = 180 - fabs(atan(bodyLon / bodyLat)) * 180 / M_PI;
+      } else {
+        bodyAngle = 90;
+      }
+      guidance2STime = millis();
+    } else if (0 < millis() - guidance2STime && millis() - guidance2STime < 3000) {
+      // ある角度以内なら真っ直ぐ，それ以外で右は右，左は左．
+      if (bodyAngle < ANGLE_THRE) {
+        direct = 0; //真っ直ぐ
+      } else {
+        if (bodyLon >= 0) {
+          direct = 1; //右
+        } else {
+          direct = -1; //左
+        }
+      }
+      if (direct == 0) {
+        rightMotor.go(255);
+        leftMotor.go(255);
+      } else if (direct == 1) { //右
+        rightMotor.go(255 * (1 - bodyAngle / 180));
+        leftMotor.go(255);
+      } else if (direct == -1) { //左
+        rightMotor.go(255);
+        leftMotor.go(255 * (1 - bodyAngle / 180));
+      }
+    }
+    else {
+      guidance2Time = 0;
+      guidance2STime = 0;
+    }
+  }
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 ///**
@@ -558,7 +640,7 @@ void Cansat::guidance4() {
     // ゴール判定は毎ループやる
     if (vol[0] > 60)state = GOAL;//ここのifの条件式の数字をいじることで閾値を変更可能
 
-//    unsigned long GUIDANCE4_TIME_THRE2 = 40000;
+    //    unsigned long GUIDANCE4_TIME_THRE2 = 40000;
     unsigned long GUIDANCE4_TIME_THRE2 = 18000;//テスト用
 
     if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
