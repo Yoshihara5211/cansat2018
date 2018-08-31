@@ -191,8 +191,8 @@ void Cansat::preparing() {
   // 加速度から格納検知
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
-            if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
-//    state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
+//    if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
+        state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
 
   }
   else {
@@ -294,7 +294,7 @@ void Cansat::running() {
   //    }
 
   countRunning++;
-  if (countRunning < 15) {
+  if (countRunning < 10) {
     rightMotor.go(255);
     leftMotor.go(255);
   }
@@ -557,8 +557,9 @@ void Cansat::guidance4() {
 
     // ゴール判定は毎ループやる
     if (vol[0] > 60)state = GOAL;//ここのifの条件式の数字をいじることで閾値を変更可能
+    // if (distance2 < 50 && distance2 > 0)state = GOAL;
 
-//    unsigned long GUIDANCE4_TIME_THRE2 = 40000;
+    //    unsigned long GUIDANCE4_TIME_THRE2 = 40000;
     unsigned long GUIDANCE4_TIME_THRE2 = 18000;//テスト用
 
     if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
@@ -572,11 +573,44 @@ void Cansat::guidance4() {
         vol[0] = 0;
         freq[0] = 0;
       }
-
-
-      if (vol[0] > soundvol) {
+      int distance_candidate = 0;
+      if (vol[0] > 0) {
+        switch (freq[0]) {
+          case N+1:
+            distance_candidate = round(-159.8 * log(vol[0]) + 631.1);
+            break;
+          case N+2:
+            distance_candidate = round(-161.6 * log(vol[0]) + 637.61);
+            break;
+          case N+3:
+            distance_candidate = round(-160.2 * log(vol[0]) + 628.52);
+            break;
+          case N+4:
+            distance_candidate = round(-148.1 * log(vol[0]) + 585.04);
+            break;
+          case N+5:
+            distance_candidate = round(-143.1 * log(vol[0]) + 562.17);
+            break;
+          case N+6:
+            distance_candidate = round(-131.6 * log(vol[0]) + 513.86);
+            break;
+          case N+7:
+            distance_candidate = round(-123.2 * log(vol[0]) + 472.33);
+            break;
+          case N+8:
+            distance_candidate = round(-106.9 * log(vol[0]) + 417.9);
+            break;
+        }
+      }
+      if(distance2==0&&distance_candidate!=0){
         soundvol = vol[0];
         soundfreq = freq[0];
+        distance2 = distance_candidate;
+      }
+      else if (distance2 > distance_candidate && distance_candidate != 0) {
+        soundvol = vol[0];
+        soundfreq = freq[0];
+        distance2 = distance_candidate;
       }
     }
     else if (millis() - guidance4Time < GUIDANCE4_TIME_THRE2) {
@@ -585,9 +619,9 @@ void Cansat::guidance4() {
         digitalWrite(RED_LED_PIN, LOW);
         digitalWrite(BLUE_LED_PIN, LOW);
         digitalWrite(GREEN_LED_PIN, LOW);
-        distance2 = round(15000 * 0.05 * exp(-0.05 * soundvol));
+        // distance2 = round(15000 * 0.05 * exp(-0.05 * soundvol));
         direct2 = soundfreq - N; // Nはこちらが任意で決める値
-        if (soundvol == 0) {
+        if (distance2 == 0) {
           guidance4Time = 0;
         } else {
           countGuidance4Loop++;
@@ -647,21 +681,3 @@ void Cansat::goal() {
   digitalWrite(GREEN_LED_PIN, LOW); delay(100);
 }
 ///////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

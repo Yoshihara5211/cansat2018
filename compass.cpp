@@ -116,11 +116,11 @@ void Compass::readCompass(double ax,double ay,double az) {
 
 
   roll=atan2(ay,az);
-  pitch=atan2(ax,ay*sin(roll)+az*cos(roll));
+  pitch=atan2(-ax,ay*sin(roll)+az*cos(roll));
   
 //RAD_RESULT = atan2(Y_DOUBLE, X_DOUBLE); //GET RADIAN
 RAD_RESULT = atan2(Z_DOUBLE*sin(roll)-Y_DOUBLE*cos(roll),X_DOUBLE*cos(pitch)+Y_DOUBLE*sin(pitch)*sin(roll)+Z_DOUBLE*sin(pitch)*cos(roll)); //GET RADIAN
-  deg = RAD_RESULT * 180 / 3.142; //GET DEGREE
+  deg = RAD_RESULT * 180 / M_PI; //GET DEGREE
   /////////////////////////////////////////////////////
 
 

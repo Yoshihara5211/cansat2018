@@ -41,8 +41,8 @@
 #define STUCKING 6  // スタック検知
 
 //閾値
-#define LIGHT1_THRE 50
-//#define LIGHT1_THRE 200
+//#define LIGHT1_THRE 50
+#define LIGHT1_THRE 300
 #define COUNT_LIGHT1_LOOP_THRE 50
 #define LIGHT2_THRE 50
 #define COUNT_LIGHT2_LOOP_THRE 50
@@ -63,4 +63,3 @@
 #define ANGLE_THRE 20
 
 #endif
-
