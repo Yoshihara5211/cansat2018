@@ -33,14 +33,14 @@ void Cansat::setup() {
 
   // 水平にしてキャリブレーション
   digitalWrite(RED_LED_PIN, HIGH);
-  tone(BUZZER_PIN, 131, 1000);
+//  tone(BUZZER_PIN, 131, 1000);
   acc.setupAcc();
   digitalWrite(RED_LED_PIN, LOW);
   Serial.println("Acc is ok");
 
   // roll,pitch,yawに回してキャリブレーション
   digitalWrite(BLUE_LED_PIN, HIGH);
-  tone(BUZZER_PIN, 523, 1000);
+//  tone(BUZZER_PIN, 523, 1000);
   compass.setupCompass(0x02, 0x00);
   compass.calibration();
   digitalWrite(BLUE_LED_PIN, LOW);
@@ -57,6 +57,11 @@ void Cansat::setGoal(float lon, float lat) {
 ///////////////////////////////////////////////////////////////////////////////////
 void Cansat::sensor() {
   Serial.println("---------------------------------------------------------------");
+  radio.getData();
+  if (laststate != radio.radio_get_data - 48) {
+  state = radio.radio_get_data - 48;
+  laststate = radio.radio_get_data - 48;
+  }
   micf.FFT();
   micr.FFT();
   micl.FFT();
@@ -110,7 +115,8 @@ void Cansat::writeSd() {
                     + String(micl.maxfreq) + ", "
                     + String(micl.maxvol) + ", "
                     + String(micb.maxfreq) + ", "
-                    + String(micb.maxvol);
+                    + String(micb.maxvol) + ","
+                    + String(radio.radio_get_data);
   sd.printSd(log_data);
 }
 
@@ -132,6 +138,7 @@ void Cansat::sendXbee() {
                      + String(micl.maxvol) + ","
                      + String(micb.maxfreq) + ","
                      + String(micb.maxvol) + ","
+                     + String(radio.radio_get_data) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -604,17 +611,3 @@ void Cansat::test() {
   }
   Serial.println(" Hz");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -42,7 +42,7 @@
 
 //閾値
 #define LIGHT1_THRE 100
-#define COUNT_LIGHT1_LOOP_THRE 100
+#define COUNT_LIGHT1_LOOP_THRE 10
 #define LIGHT2_THRE 100
 #define COUNT_LIGHT2_LOOP_THRE 100
 #define ACC_THRE 12
@@ -57,4 +57,3 @@
 #define ANGLE_THRE 20
 
 #endif
-
