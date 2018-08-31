@@ -295,37 +295,40 @@ void Cansat::running() {
   //      rightMotor.go(255);
   //      leftMotor.go(255);
   //    }
-
-    if (gps.lat < 1 && gps.lon < 1) {
-      leftMotor.stop();
-      rightMotor.stop();
+///////////////////////////////////////////
+// GPSはいらないとき止まる
+//  if (gps.lat < 1 && gps.lon < 1) {
+//    leftMotor.stop();
+//    rightMotor.stop();
+//  }
+//  else {
+///////////////////////////////////////////
+    countRunning++;
+    if (countRunning < 15) {
+      rightMotor.go(255);
+      leftMotor.go(255);
     }
     else {
-  countRunning++;
-  if (countRunning < 15) {
-    rightMotor.go(255);
-    leftMotor.go(255);
-  }
-  else {
-    guidance2(gps.lon, gps.lat, destLon, destLat);
-    //    guidance3();
-    //guidance4();
-  }
-  
-  // GPS無しでは停止
-  //  if (gps.lat < 1 && gps.lon < 1) {
-  //    leftMotor.stop();
-  //    rightMotor.stop();
-  //  }
-  //  else {
-  //    if (runningTime == 0) {
-  //      runningTime = millis();
-  //    }
-  // 走行フェーズではガイダンス則に従う
-  //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-  //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
-  //  }
-  //}
+      guidance2(gps.lon, gps.lat, destLon, destLat);
+      //    guidance3();
+      //guidance4();
+    }
+
+    // GPS無しでは停止
+    //  if (gps.lat < 1 && gps.lon < 1) {
+    //    leftMotor.stop();
+    //    rightMotor.stop();
+    //  }
+    //  else {
+    //    if (runningTime == 0) {
+    //      runningTime = millis();
+    //    }
+    // 走行フェーズではガイダンス則に従う
+    //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+    //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
+    //  }
+    //}
+//  } // if gps not or
 }
 
 
@@ -729,21 +732,3 @@ void Cansat::goal() {
   digitalWrite(GREEN_LED_PIN, LOW); delay(100);
 }
 ///////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
