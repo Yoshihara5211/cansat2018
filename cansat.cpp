@@ -58,6 +58,14 @@ void Cansat::setGoal(float lon, float lat) {
 ///////////////////////////////////////////////////////////////////////////////////
 void Cansat::sensor() {
   Serial.println("---------------------------------------------------------------");
+  ////////////////////////////////////////////////////
+  // 地上局からstate変更
+  radio.getData();
+  if (laststate != radio.radio_get_data - 48) {
+  state = radio.radio_get_data - 48;
+  laststate = radio.radio_get_data - 48;
+  }
+  ///////////////////////////////////////////////////
   micf.FFT();
   micr.FFT();
   micl.FFT();
