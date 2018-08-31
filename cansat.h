@@ -75,6 +75,7 @@ class Cansat {
 
     // 変数
     int state = 0;
+    int laststate = 0;
 
     float destLon;
     float destLat;
