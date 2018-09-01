@@ -305,11 +305,11 @@ void Cansat::running() {
   //    }
 ///////////////////////////////////////////
 // GPSはいらないとき止まる
-//  if (gps.lat < 1 && gps.lon < 1) {
-//    leftMotor.stop();
-//    rightMotor.stop();
-//  }
-//  else {
+  if (gps.lat < 1 && gps.lon < 1) {
+    leftMotor.stop();
+    rightMotor.stop();
+  }
+  else {
 ///////////////////////////////////////////
     countRunning++;
     if (countRunning < 15) {
@@ -336,7 +336,7 @@ void Cansat::running() {
     //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
     //  }
     //}
-//  } // if gps not or
+  } // if gps not or
 }
 
 
