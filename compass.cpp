@@ -106,6 +106,7 @@ void Compass::readCompass(double ax,double ay,double az) {
   Y_12 = Y_MSB;
   Y_12 = ((Y_12 << 8) & 0xFF00) | Y_LSB; //SHIFT & GET 12bit DATA WITH MSB
 
+
   /////////////////////////////////////////////////////
   // roll軸，pitch軸の回転を考慮できていない，加速度センサからのx,y,zと磁束密度x,y,zを使う必要あり
   //

@@ -59,12 +59,12 @@ void Cansat::setGoal(float lon, float lat) {
 void Cansat::sensor() {
   Serial.println("---------------------------------------------------------------");
   ////////////////////////////////////////////////////
-  // 地上局からstate変更
-  radio.getData();
-  if (laststate != radio.radio_get_data - 48) {
-  state = radio.radio_get_data - 48;
-  laststate = radio.radio_get_data - 48;
-  }
+//   地上局からstate変更
+//  radio.getData();
+//  if (laststate != radio.radio_get_data - 48) {
+//  state = radio.radio_get_data - 48;
+//  laststate = radio.radio_get_data - 48;
+//  }
   ///////////////////////////////////////////////////
   micf.FFT();
   micr.FFT();
@@ -200,7 +200,7 @@ void Cansat::preparing() {
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
 //    if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
-        state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
+//        state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
 
   }
   else {
@@ -568,7 +568,7 @@ void Cansat::guidance4() {
     // if (distance2 < 50 && distance2 > 0)state = GOAL;
 
     //    unsigned long GUIDANCE4_TIME_THRE2 = 40000;
-    unsigned long GUIDANCE4_TIME_THRE2 = 18000;//テスト用
+    unsigned long GUIDANCE4_TIME_THRE2 = 27000;//テスト用
 
     if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
       // 一定時間停止し、どの高さの音が一番大きく聞こえたかを判定
