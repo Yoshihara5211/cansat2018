@@ -89,6 +89,7 @@ void Cansat::sensor() {
   Serial.println("radio is ok");
 }
 
+// 保存変数21
 void Cansat::writeSd() {
   String log_data = String(millis()) + ", "
                     + String(state) + ", "
@@ -536,8 +537,8 @@ void Cansat::guidance4() {
     digitalWrite(RED_LED_PIN, HIGH);
     digitalWrite(BLUE_LED_PIN, HIGH);
     digitalWrite(GREEN_LED_PIN, HIGH);
-    rightMotor.stop();
-    leftMotor.stop();
+    rightMotor.stopSlowly2();
+    leftMotor.stopSlowly2();
     guidance4Time = millis();
   }
   if (guidance4Time != 0) {
@@ -654,8 +655,8 @@ void Cansat::guidance4() {
       soundfreq = 0;
       direct2 = 0;
       distance2 = 0;
-      rightMotor.stop();
-      leftMotor.stop();
+//      rightMotor.stop();
+//      leftMotor.stop();
     }
   }
 }
