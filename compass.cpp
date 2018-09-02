@@ -15,13 +15,13 @@ void Compass::setupCompass(unsigned char REG_ADR, unsigned char DATA) {
 
 void Compass::calibration() {
   x = y = z = 0;
-  x_max = -20000000;
-  x_min = 20000000;
-  y_max = -200000;
+  x_max = -20000;
+  x_min = 20000;
+  y_max = -20000;
   y_min = 20000;
-  z_max = -20000000;
-  z_min = 20000000;
-  for (int i = 0; i < 3000; i++) {
+  z_max = -20000;
+  z_min = 20000;
+  for (int i = 0; i < 8000; i++) {
     Wire.end();
     Wire.begin();
     // delay(250);                            //WAIT DATA SET TIME
@@ -106,6 +106,7 @@ void Compass::readCompass(double ax,double ay,double az) {
   Y_12 = Y_MSB;
   Y_12 = ((Y_12 << 8) & 0xFF00) | Y_LSB; //SHIFT & GET 12bit DATA WITH MSB
 
+
   /////////////////////////////////////////////////////
   // roll軸，pitch軸の回転を考慮できていない，加速度センサからのx,y,zと磁束密度x,y,zを使う必要あり
   //
@@ -116,11 +117,11 @@ void Compass::readCompass(double ax,double ay,double az) {
 
 
   roll=atan2(ay,az);
-  pitch=atan2(ax,ay*sin(roll)+az*cos(roll));
+  pitch=atan2(-ax,ay*sin(roll)+az*cos(roll));
   
 //RAD_RESULT = atan2(Y_DOUBLE, X_DOUBLE); //GET RADIAN
 RAD_RESULT = atan2(Z_DOUBLE*sin(roll)-Y_DOUBLE*cos(roll),X_DOUBLE*cos(pitch)+Y_DOUBLE*sin(pitch)*sin(roll)+Z_DOUBLE*sin(pitch)*cos(roll)); //GET RADIAN
-  deg = RAD_RESULT * 180 / 3.142; //GET DEGREE
+  deg = RAD_RESULT * 180 / M_PI; //GET DEGREE
   /////////////////////////////////////////////////////
 
 

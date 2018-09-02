@@ -23,7 +23,7 @@ class Radio {
     void sendData(String radio_data);  // データ送信
 
     // 変数  
-    int radio_get_data;  
+    int radio_get_data = 48;  
 };
 
 #endif
