@@ -200,7 +200,7 @@ void Cansat::preparing() {
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
 //    if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
-//        state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
+        state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
 
   }
   else {
