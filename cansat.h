@@ -69,7 +69,7 @@ class Cansat {
     void guidance3();
     void sort(int vol[4], int freq[4], int number[4]);
     void guidance4();
-    void guidance4running(float nowDeg,float directDeg);
+    void guidance4running(float nowDeg, float directDeg);
     //////////////
     void goal();
 
@@ -95,8 +95,6 @@ class Cansat {
     unsigned long stuckingTime = 0;
     unsigned long guidance4Time = 0;
 
-
-
     float deltaLon = 0;
     float deltaLat = 0;
     float distance = 0;
@@ -105,11 +103,11 @@ class Cansat {
     int bodyAngle = 0;
     int direct = 0;
 
-//guidance3,4用変数
+    //guidance3,4用変数
     int soundvol = 0;
     int soundfreq = 0;
     float distance2;
-    int direct2=0;
+    int direct2 = 0;
     float directDeg;
     float directAngle;
 };

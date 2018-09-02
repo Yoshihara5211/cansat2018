@@ -33,6 +33,7 @@ void Cansat::setup() {
   Serial.println("Gps is ok");
 
   // 水平にしてキャリブレーション
+  // 赤_LED & ブザー
   digitalWrite(RED_LED_PIN, HIGH);
   tone(BUZZER_PIN, 131, 2000);
   acc.setupAcc();
@@ -40,6 +41,7 @@ void Cansat::setup() {
   Serial.println("Acc is ok");
 
   // roll,pitch,yawに回してキャリブレーション
+  // 青_LED & ブザー
   digitalWrite(BLUE_LED_PIN, HIGH);
   tone(BUZZER_PIN, 523, 2000);
   compass.setupCompass(0x02, 0x00);
@@ -58,14 +60,6 @@ void Cansat::setGoal(float lon, float lat) {
 ///////////////////////////////////////////////////////////////////////////////////
 void Cansat::sensor() {
   Serial.println("---------------------------------------------------------------");
-  ////////////////////////////////////////////////////
-//   地上局からstate変更
-//  radio.getData();
-//  if (laststate != radio.radio_get_data - 48) {
-//  state = radio.radio_get_data - 48;
-//  laststate = radio.radio_get_data - 48;
-//  }
-  ///////////////////////////////////////////////////
   micf.FFT();
   micr.FFT();
   micl.FFT();
@@ -149,6 +143,14 @@ void Cansat::sendXbee() {
 // sequence関数
 ///////////////////////////////////////////////////////////////////////////////////
 void Cansat::sequence() {
+  ////////////////////////////////////////////////////
+  //   地上局からstate変更
+  radio.getData();
+  if (laststate != radio.radio_get_data - 48) {
+    state = radio.radio_get_data - 48;
+    laststate = radio.radio_get_data - 48;
+  }
+  ///////////////////////////////////////////////////
   switch (state) {
     case PREPARING:
       preparing();
@@ -184,9 +186,8 @@ void Cansat::preparing() {
   // 加速度から格納検知
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
-//    if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
-        state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
-
+    if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
+    //        state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
   }
   else {
     countPreLoop = 0;
@@ -296,7 +297,7 @@ void Cansat::running() {
     // guidance3();
     guidance4();
   }
-  
+
   // GPS無しでは停止
   //  if (gps.lat < 1 && gps.lon < 1) {
   //    leftMotor.stop();
@@ -593,7 +594,7 @@ void Cansat::guidance4() {
             break;
         }
       }
-      if(distance2==0&&distance_candidate!=0){
+      if (distance2 == 0 && distance_candidate != 0) {
         soundvol = vol[0];
         soundfreq = freq[0];
         distance2 = distance_candidate;
