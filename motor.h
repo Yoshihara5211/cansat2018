@@ -18,12 +18,14 @@ public:
   void back(int v);  // 後進
   void stop();  //ストップ(電圧止める)
   void stopSlowly();  //徐々に減速してストップ(徐々に電圧弱める)
+  void stopSlowly2();
   void brake();  //ブレーキ(電圧かけてモーター固定)
 // 変数
 int _pinVref;
 int _pinIn1;
 int _pinIn2;
 int velocity;  // 前進中の速度
+int countMotor = 0;
 };
 
 #endif

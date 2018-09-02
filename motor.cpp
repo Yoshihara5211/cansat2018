@@ -60,6 +60,22 @@ void Motor::stopSlowly() {
   digitalWrite(_pinIn2, LOW);
 }
 
+void Motor::stopSlowly2(){
+  if (countMotor < 10){
+  countMotor++;
+  analogWrite(_pinVref, velocity - 25 * countMotor);
+  digitalWrite(_pinIn1, HIGH);
+  digitalWrite(_pinIn2, LOW);
+  }
+  else{
+        analogWrite(_pinVref, 0);
+  digitalWrite(_pinIn1, LOW);
+  digitalWrite(_pinIn2, LOW);
+    }
+  }
+
+
+
 void Motor::brake() {
   velocity = 0;
   analogWrite(_pinVref, 0);

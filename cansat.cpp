@@ -84,7 +84,16 @@ void Cansat::sensor() {
 
   if (state != FLYING) sendXbee();
   Serial.println("radio is ok");
-
+  
+  countRunning++;
+  if (countRunning < 15) {
+    rightMotor.go(255);
+    leftMotor.go(255);
+  }
+  else {
+    rightMotor.stopSlowly2();
+    leftMotor.stopSlowly2();
+  }
   //////////////////////////////////////////////////////
   // guidance1テスト
   //   // GPS無しでは停止
