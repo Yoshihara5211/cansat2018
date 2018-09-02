@@ -35,7 +35,7 @@ void Cansat::setup() {
   // 水平にしてキャリブレーション
   // 赤_LED & ブザー
   digitalWrite(RED_LED_PIN, HIGH);
-  tone(BUZZER_PIN, 131, 2000);
+//  tone(BUZZER_PIN, 131, 2000);
   acc.setupAcc();
   digitalWrite(RED_LED_PIN, LOW);
   Serial.println("Acc is ok");
@@ -43,7 +43,7 @@ void Cansat::setup() {
   // roll,pitch,yawに回してキャリブレーション
   // 青_LED & ブザー
   digitalWrite(BLUE_LED_PIN, HIGH);
-  tone(BUZZER_PIN, 523, 2000);
+//  tone(BUZZER_PIN, 523, 2000);
   compass.setupCompass(0x02, 0x00);
   compass.calibration();
   digitalWrite(BLUE_LED_PIN, LOW);
@@ -199,7 +199,7 @@ void Cansat::preparing() {
 void Cansat::flying() {
   if (flyingTime == 0) {
     flyingTime = millis();
-    tone(BUZZER_PIN, 523, 5000);
+//    tone(BUZZER_PIN, 523, 5000);
     digitalWrite(RED_LED_PIN, HIGH);
     digitalWrite(BLUE_LED_PIN, LOW);
     digitalWrite(GREEN_LED_PIN, LOW);
@@ -249,7 +249,7 @@ void Cansat::dropping() {
 void Cansat::landing() {
   if (landingTime == 0) {
     landingTime = millis();
-    tone(BUZZER_PIN, 523, 2000);
+//    tone(BUZZER_PIN, 523, 2000);
     digitalWrite(RED_LED_PIN, LOW);
     digitalWrite(BLUE_LED_PIN, LOW);
     digitalWrite(GREEN_LED_PIN, HIGH);
@@ -275,7 +275,7 @@ void Cansat::running() {
   if (runningTime == 0) {
     analogWrite(RELEASING2_PIN, 0);
     runningTime = millis();
-    tone(BUZZER_PIN, 121, 2000);
+//    tone(BUZZER_PIN, 121, 2000);
     analogWrite(RELEASING2_PIN, 0);
     digitalWrite(RED_LED_PIN, HIGH);
     digitalWrite(BLUE_LED_PIN, HIGH);
@@ -542,6 +542,8 @@ void Cansat::guidance4() {
     guidance4Time = millis();
   }
   if (guidance4Time != 0) {
+    rightMotor.stopSlowly2();
+    leftMotor.stopSlowly2();
     int vol[4] = {micf.maxvol, micr.maxvol, micb.maxvol, micl.maxvol}; // 各マイクが拾った音の大きさ
     int freq[4] = {micf.maxfreq, micr.maxfreq, micb.maxfreq, micl.maxfreq}; //各マイクが拾った音の高さ
     int number[4] = {1, 2, 3, 4};//各マイクの番号(1,2,3,4→前、右、後、左のつもり)
