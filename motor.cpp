@@ -55,16 +55,16 @@ void Motor::stopSlowly() {
     }
     velocity = 0;
   }
-    analogWrite(_pinVref, 0);
+  analogWrite(_pinVref, 0);
   digitalWrite(_pinIn1, LOW);
   digitalWrite(_pinIn2, LOW);
 }
 
 void Motor::stopSlowly2(){
   if (velocity != 0) {
-  if (countMotor < 10){
+  if (countMotor < 12){
   countMotor++;
-  analogWrite(_pinVref, velocity - 25 * countMotor);
+  analogWrite(_pinVref, velocity - velocity * countMotor / 12);
   digitalWrite(_pinIn1, HIGH);
   digitalWrite(_pinIn2, LOW);
   }
@@ -75,9 +75,6 @@ void Motor::stopSlowly2(){
   digitalWrite(_pinIn1, LOW);
   digitalWrite(_pinIn2, LOW);
     }
-  analogWrite(_pinVref, 0);
-  digitalWrite(_pinIn1, LOW);
-  digitalWrite(_pinIn2, LOW);
   }
 }
 

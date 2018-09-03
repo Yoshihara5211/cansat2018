@@ -657,8 +657,8 @@ void Cansat::guidance4() {
       soundfreq = 0;
       direct2 = 0;
       distance2 = 0;
-//      rightMotor.stop();
-//      leftMotor.stop();
+      rightMotor.stopSlowly2();
+      leftMotor.stopSlowly2();
     }
   }
 }
