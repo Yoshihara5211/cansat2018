@@ -92,6 +92,7 @@ class Cansat {
     unsigned long droppingTime = 0;
     unsigned long landingTime = 0;
     unsigned long runningTime = 0;
+    unsigned long NowRunningTime = 0;
     unsigned long stuckingTime = 0;
     unsigned long guidance4Time = 0;
 

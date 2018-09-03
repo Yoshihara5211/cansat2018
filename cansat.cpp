@@ -111,7 +111,8 @@ void Cansat::writeSd() {
                     + String(direct2) + ","
                     + String(distance2) + ","
                     + String(soundvol) + ","
-                    + String(millis() - guidance4Time);
+                    + String(millis() - guidance4Time) + ","
+                    + String(NowRunningTime);
   sd.printSd(log_data);
 }
 
@@ -137,6 +138,7 @@ void Cansat::sendXbee() {
                      + String(distance2) + ","
                      + String(soundvol) + ","
                      + String(millis() - guidance4Time) + ","
+                     + String(NowRunningTime) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -297,6 +299,7 @@ void Cansat::running() {
   else {
     // guidance3();
     guidance4();
+    NowRunningTime = millis() - runningTime;
   }
 
   // GPS無しでは停止
