@@ -109,7 +109,7 @@ void Cansat::writeSd() {
                     + String(micb.maxfreq) + ", "
                     + String(micb.maxvol) + ", "
                     + String(direct2) + ","
-                    + String(distance2) + ","
+                    + String(distance3) + ","
                     + String(soundvol) + ","
                     + String(millis() - guidance4Time) + ","
                     + String(NowRunningTime);
@@ -135,7 +135,7 @@ void Cansat::sendXbee() {
                      + String(micb.maxfreq) + ","
                      + String(micb.maxvol) + ","
                      + String(direct2) + ","
-                     + String(distance2) + ","
+                     + String(distance3) + ","
                      + String(soundvol) + ","
                      + String(millis() - guidance4Time) + ","
                      + String(NowRunningTime) + ","
@@ -623,6 +623,7 @@ void Cansat::guidance4() {
           guidance4Time = 0;
         } else {
           countGuidance4Loop++;
+          distance3=distance2;
         }
       }
       else {

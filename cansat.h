@@ -108,6 +108,7 @@ class Cansat {
     int soundvol = 0;
     int soundfreq = 0;
     float distance2;
+    int distance3
     int direct2 = 0;
     float directDeg;
     float directAngle;
