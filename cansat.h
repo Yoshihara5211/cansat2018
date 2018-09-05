@@ -108,9 +108,11 @@ class Cansat {
     int soundvol = 0;
     int soundfreq = 0;
     float distance2;
+    int distance3;
     int direct2 = 0;
     float directDeg;
     float directAngle;
+    unsigned long GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE+3000;//テスト用
 };
 
 #endif
