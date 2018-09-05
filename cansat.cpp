@@ -35,7 +35,7 @@ void Cansat::setup() {
   // 水平にしてキャリブレーション
   // 赤_LED & ブザー
   digitalWrite(RED_LED_PIN, HIGH);
-//  tone(BUZZER_PIN, 131, 2000);
+  tone(BUZZER_PIN, 131, 2000);
   acc.setupAcc();
   digitalWrite(RED_LED_PIN, LOW);
   Serial.println("Acc is ok");
@@ -43,7 +43,8 @@ void Cansat::setup() {
   // roll,pitch,yawに回してキャリブレーション
   // 青_LED & ブザー
   digitalWrite(BLUE_LED_PIN, HIGH);
-//  tone(BUZZER_PIN, 523, 2000);
+
+  tone(BUZZER_PIN, 523, 2000);
   compass.setupCompass(0x02, 0x00);
   compass.calibration();
   digitalWrite(BLUE_LED_PIN, LOW);
@@ -296,9 +297,14 @@ void Cansat::running() {
     rightMotor.go(255);
     leftMotor.go(255);
   }
+  else if (countRunning = 11){
+    digitalWrite(BLUE_LED_PIN, HIGH);
+    tone(BUZZER_PIN, 523, 2000);
+    compass.calibration2();
+    digitalWrite(BLUE_LED_PIN, LOW);
+    }
   else {
     // guidance3();
-    compass.calibration2();
     guidance4();
     NowRunningTime = millis() - runningTime;
   }
