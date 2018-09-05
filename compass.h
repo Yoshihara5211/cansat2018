@@ -5,6 +5,8 @@
 #include "Arduino.h"
 #include <Wire.h>
 #include <math.h>
+#include "motor.h"
+#include "constant.h"
 #define HMC5883L_ADR 0x1E //7bit ADDRESS
 
 
@@ -15,9 +17,13 @@ class Compass {
     ~Compass();
     void setupCompass(unsigned char REG_ADR, unsigned char DATA);
     void calibration();
+    void calibration2();
     unsigned char I2C_READ(unsigned char REG_ADR);
     void I2C_WRITE(unsigned char REG_ADR, unsigned char DATA);
     void readCompass(double ax,double ay,double az);
+
+    Motor leftMotor = Motor(LEFT_MOTOR_VREF_PIN, LEFT_MOTOR_IN1_PIN, LEFT_MOTOR_IN2_PIN);
+    Motor rightMotor = Motor(RIGHT_MOTOR_VREF_PIN, RIGHT_MOTOR_IN1_PIN, RIGHT_MOTOR_IN2_PIN);
     
     // 変数
     unsigned char X_MSB;
@@ -48,5 +54,7 @@ class Compass {
     double z_cal;
     double roll;
     double pitch;
+
+    int countCali = 0;
 };
 #endif

@@ -298,6 +298,7 @@ void Cansat::running() {
   }
   else {
     // guidance3();
+    compass.calibration2();
     guidance4();
     NowRunningTime = millis() - runningTime;
   }
