@@ -89,6 +89,10 @@ void Compass::I2C_WRITE(unsigned char REG_ADR, unsigned char DATA)
 }
 
 void Compass::readCompass(double ax,double ay,double az) {
+  double x_double[9]={};
+  double y_double[9]={};
+  double z_double[9]={};
+  for(int i=0;i<9;i++){//////9回取ってきた値
   Wire.end();
   Wire.begin();
   // delay(250);                            //WAIT DATA SET TIME
@@ -113,16 +117,21 @@ void Compass::readCompass(double ax,double ay,double az) {
   Y_DOUBLE = Y_12 - y_cal;                     //CONVERT TO DOUBLE (FOR atan2)
   Z_DOUBLE = Z_12 - z_cal;
   //
-
+  x_double[i]=X_DOUBLE;////////9回の値を配列に挿入
+  y_double[i]=X_DOUBLE;////////
+  z_double[i]=X_DOUBLE;////////
+  }////////////////////////////9回取ってきた値
+  sort(x_double,x_double+9);
+  sort(y_double,y_double+9);
+  sort(z_double,z_double+9);
 
   roll=atan2(ay,az);
   pitch=atan2(ax,ay*sin(roll)+az*cos(roll));
   
 //RAD_RESULT = atan2(Y_DOUBLE, X_DOUBLE); //GET RADIAN
-RAD_RESULT = atan2(Z_DOUBLE*sin(roll)-Y_DOUBLE*cos(roll),X_DOUBLE*cos(pitch)+Y_DOUBLE*sin(pitch)*sin(roll)+Z_DOUBLE*sin(pitch)*cos(roll)); //GET RADIAN
+//RAD_RESULT = atan2(Z_DOUBLE*sin(roll)-Y_DOUBLE*cos(roll),X_DOUBLE*cos(pitch)+Y_DOUBLE*sin(pitch)*sin(roll)+Z_DOUBLE*sin(pitch)*cos(roll)); //GET RADIAN
+RAD_RESULT = atan2(z_double[3]*sin(roll)-y_bouble[3]*cos(roll),x_double[3]*cos(pitch)+y_bouble[3]*sin(pitch)*sin(roll)+z_double[3]*sin(pitch)*cos(roll)); //GET RADIAN
   deg = RAD_RESULT * 180 / 3.142; //GET DEGREE
   /////////////////////////////////////////////////////
-
-
 
 }
