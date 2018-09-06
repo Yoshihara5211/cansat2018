@@ -298,10 +298,11 @@ void Cansat::running() {
     leftMotor.go(255);
   }
   else if (countRunning = 11){
+    digitalWrite(RED_LED_PIN, LOW);
     digitalWrite(BLUE_LED_PIN, HIGH);
+    digitalWrite(GREEN_LED_PIN, LOW);
     tone(BUZZER_PIN, 523, 2000);
     compass.calibration2();
-    digitalWrite(BLUE_LED_PIN, LOW);
     }
   else {
     // guidance3();
