@@ -140,6 +140,7 @@ void Cansat::sendXbee() {
                      + String(soundvol) + ","
                      + String(millis() - guidance4Time) + ","
                      + String(NowRunningTime) + ","
+                     + String(compass.countCali) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -191,7 +192,7 @@ void Cansat::preparing() {
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
     if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
-    //        state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
+//            state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
   }
   else {
     countPreLoop = 0;
@@ -202,7 +203,7 @@ void Cansat::preparing() {
 void Cansat::flying() {
   if (flyingTime == 0) {
     flyingTime = millis();
-//    tone(BUZZER_PIN, 523, 5000);
+    //    tone(BUZZER_PIN, 523, 5000);
     digitalWrite(RED_LED_PIN, HIGH);
     digitalWrite(BLUE_LED_PIN, LOW);
     digitalWrite(GREEN_LED_PIN, LOW);
@@ -252,7 +253,7 @@ void Cansat::dropping() {
 void Cansat::landing() {
   if (landingTime == 0) {
     landingTime = millis();
-//    tone(BUZZER_PIN, 523, 2000);
+    //    tone(BUZZER_PIN, 523, 2000);
     digitalWrite(RED_LED_PIN, LOW);
     digitalWrite(BLUE_LED_PIN, LOW);
     digitalWrite(GREEN_LED_PIN, HIGH);
@@ -278,48 +279,49 @@ void Cansat::running() {
   if (runningTime == 0) {
     analogWrite(RELEASING2_PIN, 0);
     runningTime = millis();
-//    tone(BUZZER_PIN, 121, 2000);
-    analogWrite(RELEASING2_PIN, 0);
+    //    tone(BUZZER_PIN, 121, 2000);
     digitalWrite(RED_LED_PIN, HIGH);
     digitalWrite(BLUE_LED_PIN, HIGH);
     digitalWrite(GREEN_LED_PIN, HIGH);
   }
 
-  //  if (runningTime != 0) {
-  //    if (millis() - runningTime < 10000) {
-  //      rightMotor.go(255);
-  //      leftMotor.go(255);
-  //    }
+  if (runningTime != 0) {
+    
+    //    if (millis() - runningTime < 10000) {
+    //      rightMotor.go(255);
+    //      leftMotor.go(255);
+    //    }
 
-  // 最初まっすぐ走る
-  countRunning++;
-  if (countRunning < 10) {
-    rightMotor.go(255);
-    leftMotor.go(255);
-  }
-  else if (countRunning = 11){
-    digitalWrite(RED_LED_PIN, LOW);
-    digitalWrite(BLUE_LED_PIN, HIGH);
-    digitalWrite(GREEN_LED_PIN, LOW);
-    tone(BUZZER_PIN, 523, 2000);
-    compass.calibration2();
+    countRunning++;
+    if (countRunning < 10) {
+      rightMotor.go(255);
+      leftMotor.go(255);
     }
-  else {
-    // guidance3();
-    guidance4();
-    NowRunningTime = millis() - runningTime;
-  }
+//      else if (countRunning == 10){
+//        digitalWrite(RED_LED_PIN, LOW);
+//        digitalWrite(BLUE_LED_PIN, HIGH);
+//        digitalWrite(GREEN_LED_PIN, LOW);
+//        tone(BUZZER_PIN, 523, 2000);
+//        compass.calibration2();
+//        }
+    else {
+      // guidance3();
+      guidance4();
+      NowRunningTime = millis() - runningTime;
+    }
 
-  // GPS無しでは停止
-  //  if (gps.lat < 1 && gps.lon < 1) {
-  //    leftMotor.stop();
-  //    rightMotor.stop();
-  //  }
-  //  else {
-  //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-  //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
-  //  }
-  //}
+    // GPS無しでは停止
+    //  if (gps.lat < 1 && gps.lon < 1) {
+    //    leftMotor.stop();
+    //    rightMotor.stop();
+    //  }
+    //  else {
+    //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+    //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
+    //  }
+    //}
+
+  }
 }
 
 
@@ -580,36 +582,36 @@ void Cansat::guidance4() {
       if (vol[0] > 0) {
         switch (freq[0]) {
           case N+1:
-//            distance_candidate = round(-159.8 * log(vol[0]) + 631.1);
-            distance_candidate = round(897.69*exp(-0.042*vol[0]));
+            //            distance_candidate = round(-159.8 * log(vol[0]) + 631.1);
+            distance_candidate = round(897.69 * exp(-0.042 * vol[0]));
             break;
           case N+2:
-//            distance_candidate = round(-161.6 * log(vol[0]) + 637.61);
-            distance_candidate = round(912.47*exp(-0.038*vol[0]));
+            //            distance_candidate = round(-161.6 * log(vol[0]) + 637.61);
+            distance_candidate = round(912.47 * exp(-0.038 * vol[0]));
             break;
           case N+3:
-//            distance_candidate = round(-160.2 * log(vol[0]) + 628.52);
-            distance_candidate = round(944.43*exp(-0.035*vol[0]));
+            //            distance_candidate = round(-160.2 * log(vol[0]) + 628.52);
+            distance_candidate = round(944.43 * exp(-0.035 * vol[0]));
             break;
           case N+4:
-//            distance_candidate = round(-148.1 * log(vol[0]) + 585.04);
-            distance_candidate = round(953.2*exp(-0.033*vol[0]));
+            //            distance_candidate = round(-148.1 * log(vol[0]) + 585.04);
+            distance_candidate = round(953.2 * exp(-0.033 * vol[0]));
             break;
           case N+5:
-//            distance_candidate = round(-143.1 * log(vol[0]) + 562.17);
-            distance_candidate = round(996.23*exp(-0.033*vol[0]));
+            //            distance_candidate = round(-143.1 * log(vol[0]) + 562.17);
+            distance_candidate = round(996.23 * exp(-0.033 * vol[0]));
             break;
           case N+6:
-//            distance_candidate = round(-131.6 * log(vol[0]) + 513.86);
-            distance_candidate = round(948.72*exp(-0.031*vol[0]));
+            //            distance_candidate = round(-131.6 * log(vol[0]) + 513.86);
+            distance_candidate = round(948.72 * exp(-0.031 * vol[0]));
             break;
           case N+7:
-//            distance_candidate = round(-123.2 * log(vol[0]) + 472.33);
-            distance_candidate = round(907.8*exp(-0.033*vol[0]));
+            //            distance_candidate = round(-123.2 * log(vol[0]) + 472.33);
+            distance_candidate = round(907.8 * exp(-0.033 * vol[0]));
             break;
           case N+8:
-//            distance_candidate = round(-106.9 * log(vol[0]) + 417.9);
-            distance_candidate = round(823.26*exp(-0.035*vol[0]));
+            //            distance_candidate = round(-106.9 * log(vol[0]) + 417.9);
+            distance_candidate = round(823.26 * exp(-0.035 * vol[0]));
             break;
         }
       }
@@ -617,8 +619,8 @@ void Cansat::guidance4() {
         soundvol = vol[0];
         soundfreq = freq[0];
         distance2 = distance_candidate;
-        if(distance2<400){
-          GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE+1000;//テスト用
+        if (distance2 < 400) {
+          GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 1000; //テスト用
           digitalWrite(RED_LED_PIN, LOW);
           digitalWrite(BLUE_LED_PIN, HIGH);
           digitalWrite(GREEN_LED_PIN, HIGH);
@@ -628,8 +630,8 @@ void Cansat::guidance4() {
         soundvol = vol[0];
         soundfreq = freq[0];
         distance2 = distance_candidate;
-        if(distance2<400){
-          GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE+1000;//テスト用
+        if (distance2 < 400) {
+          GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 1000; //テスト用
           digitalWrite(RED_LED_PIN, LOW);
           digitalWrite(BLUE_LED_PIN, HIGH);
           digitalWrite(GREEN_LED_PIN, HIGH);
@@ -648,7 +650,7 @@ void Cansat::guidance4() {
           guidance4Time = 0;
         } else {
           countGuidance4Loop++;
-          distance3=distance2;
+          distance3 = distance2;
         }
       }
       else {
@@ -686,7 +688,7 @@ void Cansat::guidance4() {
       soundfreq = 0;
       direct2 = 0;
       distance2 = 0;
-      GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE+3000;
+      GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 3000;
       rightMotor.stopSlowly2();
       leftMotor.stopSlowly2();
     }

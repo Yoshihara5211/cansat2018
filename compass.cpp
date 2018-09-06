@@ -119,25 +119,20 @@ void Compass::calibration2() {
     else if (z_tmp < z_min) {
       z_min = z_tmp;
     }
-  }
-  x_cal = ((double)x_max + (double)x_min) / 2;
-  y_cal = ((double)y_max + (double)y_min) / 2;
-  z_cal = ((double)z_max + (double)z_min) / 2;
-
-  countCali++;
-  if (countCali < 100) {
+      countCali++;
+  if (countCali < 200) {
     rightMotor.go(255);
     leftMotor.go(255);
   }
-  else if (countCali >= 100 && countCali < 140) {
+  else if (countCali >= 200 && countCali < 300) {
     rightMotor.brake();
     leftMotor.brake();
   }
-  else if (countCali >= 140 && countCali < 200) {
+  else if (countCali >= 300 && countCali < 400) {
     rightMotor.back(255);
     leftMotor.back(255);
   }
-  else if (countCali >= 200 && countCali < 300) {
+  else if (countCali >= 400 && countCali < 800) {
     rightMotor.go(255);
     leftMotor.go(0);
   }
@@ -145,6 +140,10 @@ void Compass::calibration2() {
     rightMotor.stopSlowly2();
     leftMotor.stopSlowly2();
   }
+  }
+  x_cal = ((double)x_max + (double)x_min) / 2;
+  y_cal = ((double)y_max + (double)y_min) / 2;
+  z_cal = ((double)z_max + (double)z_min) / 2;
 }
 
 unsigned char Compass::I2C_READ(unsigned char REG_ADR) {
