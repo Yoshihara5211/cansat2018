@@ -120,19 +120,19 @@ void Compass::calibration2() {
       z_min = z_tmp;
     }
       countCali++;
-  if (countCali < 200) {
+  if (countCali < 2000) {
     rightMotor.go(255);
     leftMotor.go(255);
   }
-  else if (countCali >= 200 && countCali < 300) {
+  else if (countCali >= 2000 && countCali < 3000) {
     rightMotor.brake();
     leftMotor.brake();
   }
-  else if (countCali >= 300 && countCali < 400) {
+  else if (countCali >= 3000 && countCali < 4000) {
     rightMotor.back(255);
     leftMotor.back(255);
   }
-  else if (countCali >= 400 && countCali < 800) {
+  else if (countCali >= 4000 && countCali < 8000) {
     rightMotor.go(255);
     leftMotor.go(0);
   }
