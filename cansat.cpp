@@ -3,6 +3,7 @@
   @author Hiroyuki Yoshihara
   @date Created: 20170518
 */
+
 #include "cansat.h"
 
 Cansat::Cansat() {
@@ -43,7 +44,6 @@ void Cansat::setup() {
   // roll,pitch,yawに回してキャリブレーション
   // 青_LED & ブザー
   digitalWrite(BLUE_LED_PIN, HIGH);
-
   tone(BUZZER_PIN, 523, 2000);
   compass.setupCompass(0x02, 0x00);
   compass.calibration();
@@ -140,7 +140,6 @@ void Cansat::sendXbee() {
                      + String(soundvol) + ","
                      + String(millis() - guidance4Time) + ","
                      + String(NowRunningTime) + ","
-                     + String(compass.countCali) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -192,7 +191,7 @@ void Cansat::preparing() {
   if (light.lightValue < LIGHT1_THRE) {
     countPreLoop++;
     if (countPreLoop > COUNT_LIGHT1_LOOP_THRE)  state = FLYING;//通常（本番用はこっち）
-//            state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
+    //            state = RUNNING;//ボイド缶検知、放出検知、着地検知、分離を省略（guidanceチェック用）
   }
   else {
     countPreLoop = 0;
@@ -286,7 +285,7 @@ void Cansat::running() {
   }
 
   if (runningTime != 0) {
-    
+
     //    if (millis() - runningTime < 10000) {
     //      rightMotor.go(255);
     //      leftMotor.go(255);
@@ -297,13 +296,13 @@ void Cansat::running() {
       rightMotor.go(255);
       leftMotor.go(255);
     }
-      else if (countRunning == 10){
-        digitalWrite(RED_LED_PIN, LOW);
-        digitalWrite(BLUE_LED_PIN, HIGH);
-        digitalWrite(GREEN_LED_PIN, LOW);
-        tone(BUZZER_PIN, 523, 2000);
-        compass.calibration2();
-        }
+    else if (countRunning == 10) {
+      digitalWrite(RED_LED_PIN, LOW);
+      digitalWrite(BLUE_LED_PIN, HIGH);
+      digitalWrite(GREEN_LED_PIN, LOW);
+      tone(BUZZER_PIN, 523, 2000);
+      compass.calibration2();
+    }
     else {
       // guidance3();
       guidance4();
@@ -333,6 +332,10 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
   deltaLat = (goalLat - nowLat);
   distance = sqrt(pow(deltaLat, 2) + pow(deltaLon, 2));
   // 機体座標に変換，回転行列使うよ，deg2radするよ
+  // nowDegを0°～360°に変換
+  if (nowDeg < 0){
+    nowDeg = 360 + nowDeg;
+    }
   bodyLon = deltaLon * cos(nowDeg / 180 * M_PI) + deltaLat * sin(nowDeg / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
   bodyLat = deltaLon * sin(nowDeg / 180 * M_PI) + deltaLat * cos(nowDeg / 180 * M_PI); // [y']   [-sin(th)    cos(th)] [y]
 
@@ -697,7 +700,6 @@ void Cansat::guidance4() {
 
 // State = 5
 void Cansat::goal() {
-  // stopslowlyの同時駆動即が必要
   leftMotor.stopSlowly2();
   rightMotor.stopSlowly2();
   digitalWrite(RED_LED_PIN, HIGH); delay(100);
@@ -706,5 +708,26 @@ void Cansat::goal() {
   digitalWrite(RED_LED_PIN, LOW); delay(100);
   digitalWrite(BLUE_LED_PIN, LOW); delay(100);
   digitalWrite(GREEN_LED_PIN, LOW); delay(100);
+}
+
+// State = 6
+void Cansat::goal2() {
+  countGoal++;
+  if (countGoal < 100) {
+    leftMotor.stopSlowly2();
+    rightMotor.stopSlowly2();
+    digitalWrite(RED_LED_PIN, HIGH); delay(100);
+    digitalWrite(BLUE_LED_PIN, HIGH); delay(100);
+    digitalWrite(GREEN_LED_PIN, HIGH); delay(100);
+    digitalWrite(RED_LED_PIN, LOW); delay(100);
+    digitalWrite(BLUE_LED_PIN, LOW); delay(100);
+    digitalWrite(GREEN_LED_PIN, LOW); delay(100);
+  }
+  else if (countGoal = 100) {
+    tone(BUZZER_PIN, 523, 3000);
+  }
+  else {
+    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////////

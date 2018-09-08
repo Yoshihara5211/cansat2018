@@ -72,6 +72,7 @@ class Cansat {
     void guidance4running(float nowDeg, float directDeg);
     //////////////
     void goal();
+    void goal2();
 
     // 変数
     int state = 0;
@@ -86,6 +87,7 @@ class Cansat {
     int countReleasingLoop = 0;
     int countRunning = 0;
     int countGuidance4Loop = 0;
+    int countGoal = 0;
 
     unsigned long preparingTime = 0;
     unsigned long flyingTime = 0;
