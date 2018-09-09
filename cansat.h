@@ -80,6 +80,7 @@ class Cansat {
 
     float destLon;
     float destLat;
+    int deg;
 
     int countPreLoop = 0;
     int countFlyLoop = 0;

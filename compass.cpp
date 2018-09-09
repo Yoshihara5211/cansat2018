@@ -120,19 +120,27 @@ void Compass::calibration2() {
       z_min = z_tmp;
     }
       countCali++;
-  if (countCali < 2000) {
+  if (countCali < 1000) {
     rightMotor.go(255);
     leftMotor.go(255);
   }
-  else if (countCali >= 2000 && countCali < 2500) {
+  else if (countCali >= 1000 && countCali < 2000) {
     rightMotor.brake();
     leftMotor.brake();
   }
-  else if (countCali >= 2500 && countCali < 3500) {
+  else if (countCali >= 2000 && countCali < 3000) {
     rightMotor.go(255);
     leftMotor.go(255);
   }
-  else if (countCali >= 3500 && countCali < 6500) {
+    else if (countCali >= 3000 && countCali < 4000) {
+    rightMotor.brake();
+    leftMotor.brake();
+  }
+    else if (countCali >= 4000 && countCali < 5000) {
+    rightMotor.go(255);
+    leftMotor.go(255);
+  }
+  else if (countCali >= 5000 && countCali < 7000) {
     rightMotor.go(255);
     leftMotor.go(0);
   }
@@ -142,7 +150,7 @@ void Compass::calibration2() {
   }
   }
   x_cal = ((double)x_max + (double)x_min) / 2;
-  y_cal = ((double)y_max + (double)y_min) / 2;
+//  y_cal = ((double)y_max + (double)y_min) / 2;
   z_cal = ((double)z_max + (double)z_min) / 2;
 }
 

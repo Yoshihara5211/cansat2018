@@ -40,10 +40,10 @@
 #define LANDING 3  // 着地検知
 #define RUNNING 4  // 走行アルゴリズム
 #define GOAL 5  // ゴール検知
-#define STUCKING 6  // スタック検知
+#define GOAL2 6  // ゴール2検知
 
 //閾値
-#define LIGHT1_THRE 50
+#define LIGHT1_THRE 3
 #define COUNT_LIGHT1_LOOP_THRE 50
 #define LIGHT2_THRE 50
 #define COUNT_LIGHT2_LOOP_THRE 50

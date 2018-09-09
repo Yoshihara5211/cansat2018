@@ -19,8 +19,9 @@ Cansat::~Cansat() {
 // setup関数
 ///////////////////////////////////////////////////////////////////////////////////
 void Cansat::setup() {
-  // setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
-  setGoal(4014236.80, 13998730.00);  // ゴール設定(能代)
+// setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
+//  setGoal(40.14236.80, 139.9873000);  // ゴール設定(能代)
+setGoal(40.6536600, -119.3517200);  // ゴール設定(AIRLLIS)
 
   Serial.begin(9600);
 
@@ -140,6 +141,8 @@ void Cansat::sendXbee() {
                      + String(soundvol) + ","
                      + String(millis() - guidance4Time) + ","
                      + String(NowRunningTime) + ","
+                     + String(bodyAngle) + ","
+                     + String(direct) + ","
                      + "e";
   radio.sendData(send_data);
 }
@@ -173,6 +176,9 @@ void Cansat::sequence() {
       break;
     case GOAL:
       goal();
+      break;
+    case GOAL2:
+      goal2();
       break;
   }
 }
@@ -296,30 +302,27 @@ void Cansat::running() {
       rightMotor.go(255);
       leftMotor.go(255);
     }
-    else if (countRunning == 10) {
-      digitalWrite(RED_LED_PIN, LOW);
-      digitalWrite(BLUE_LED_PIN, HIGH);
-      digitalWrite(GREEN_LED_PIN, LOW);
-      tone(BUZZER_PIN, 523, 2000);
-      compass.calibration2();
-    }
+//    else if (countRunning == 10) {
+//      digitalWrite(RED_LED_PIN, LOW);
+//      digitalWrite(BLUE_LED_PIN, HIGH);
+//      digitalWrite(GREEN_LED_PIN, LOW);
+//      tone(BUZZER_PIN, 523, 2000);
+//      compass.calibration2();
+//    }
     else {
-      // guidance3();
       guidance4();
       NowRunningTime = millis() - runningTime;
     }
 
     // GPS無しでは停止
-    //  if (gps.lat < 1 && gps.lon < 1) {
-    //    leftMotor.stop();
-    //    rightMotor.stop();
-    //  }
-    //  else {
-    //    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-    //    if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
-    //  }
-    //}
-
+//      if (gps.lat < 1 && gps.lon < 1) {
+//        leftMotor.stop();
+//        rightMotor.stop();
+//      }
+//      else {
+//        guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+//        if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
+//      }
   }
 }
 
@@ -334,10 +337,13 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
   // 機体座標に変換，回転行列使うよ，deg2radするよ
   // nowDegを0°～360°に変換
   if (nowDeg < 0){
-    nowDeg = 360 + nowDeg;
+    deg = 360 + nowDeg;
     }
-  bodyLon = deltaLon * cos(nowDeg / 180 * M_PI) + deltaLat * sin(nowDeg / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
-  bodyLat = deltaLon * sin(nowDeg / 180 * M_PI) + deltaLat * cos(nowDeg / 180 * M_PI); // [y']   [-sin(th)    cos(th)] [y]
+    else {
+      deg = nowDeg;
+      }
+  bodyLon = deltaLon * cos(deg / 180 * M_PI) + deltaLat * sin(deg / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
+  bodyLat = deltaLon * sin(deg / 180 * M_PI) + deltaLat * cos(deg / 180 * M_PI); // [y']   [-sin(th)    cos(th)] [y]
 
   // 機体座標系でのゴールまでの角度を計算
   if (bodyLat > 0) {
@@ -370,6 +376,7 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
     rightMotor.go(255);
     leftMotor.go(255 * (1 - bodyAngle / 180));
   }
+  delay(500);
 }
 
 
@@ -567,7 +574,7 @@ void Cansat::guidance4() {
     sort(vol, freq, number);
 
     // ゴール判定は毎ループやる
-    if (vol[0] > 60)state = GOAL;//ここのifの条件式の数字をいじることで閾値を変更可能
+    if (vol[0] > 60)state = GOAL2;//ここのifの条件式の数字をいじることで閾値を変更可能
     // if (distance2 < 50 && distance2 > 0)state = GOAL;
 
     if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
@@ -713,7 +720,7 @@ void Cansat::goal() {
 // State = 6
 void Cansat::goal2() {
   countGoal++;
-  if (countGoal < 100) {
+  if (countGoal < 50) {
     leftMotor.stopSlowly2();
     rightMotor.stopSlowly2();
     digitalWrite(RED_LED_PIN, HIGH); delay(100);
@@ -723,7 +730,7 @@ void Cansat::goal2() {
     digitalWrite(BLUE_LED_PIN, LOW); delay(100);
     digitalWrite(GREEN_LED_PIN, LOW); delay(100);
   }
-  else if (countGoal = 100) {
+  else if (countGoal = 50) {
     tone(BUZZER_PIN, 523, 3000);
   }
   else {
