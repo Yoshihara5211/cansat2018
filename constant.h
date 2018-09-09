@@ -8,11 +8,13 @@
 
 //ピン番号指定
 #define LEFT_MOTOR_VREF_PIN 4
-#define LEFT_MOTOR_IN1_PIN 2
-#define LEFT_MOTOR_IN2_PIN 3 
+#define LEFT_MOTOR_IN1_PIN 3 // 回路2機体2
+#define LEFT_MOTOR_IN2_PIN 2 // 回路2機体2
+//#define LEFT_MOTOR_IN1_PIN 2 // 回路3機体1
+//#define LEFT_MOTOR_IN2_PIN 3 // 回路3機体1
 #define RIGHT_MOTOR_VREF_PIN 45
-#define RIGHT_MOTOR_IN1_PIN 46 // 回路2機体2
-#define RIGHT_MOTOR_IN2_PIN 44 // 回路2機体2
+#define RIGHT_MOTOR_IN1_PIN 44 // 回路2機体2
+#define RIGHT_MOTOR_IN2_PIN 46 // 回路2機体2
 //#define RIGHT_MOTOR_IN1_PIN 44 // 回路3機体1
 //#define RIGHT_MOTOR_IN2_PIN 46 // 回路3機体1
 #define RED_LED_PIN A9
