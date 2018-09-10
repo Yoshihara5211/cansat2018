@@ -574,7 +574,7 @@ void Cansat::guidance4() {
     sort(vol, freq, number);
 
     // ゴール判定は毎ループやる
-    if (vol[0] > 60)state = GOAL2;//ここのifの条件式の数字をいじることで閾値を変更可能
+    if (vol[0] > 60)state = GOAL;//ここのifの条件式の数字をいじることで閾値を変更可能
     // if (distance2 < 50 && distance2 > 0)state = GOAL;
 
     if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
