@@ -21,7 +21,7 @@ Cansat::~Cansat() {
 void Cansat::setup() {
 // setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
 //  setGoal(40.14236.80, 139.9873000);  // ゴール設定(能代)
-setGoal(40.6536600, -119.3517200);  // ゴール設定(AIRLLIS)
+setGoal(40.52805, -119.07297);  // ゴール設定(AIRLLIS)
 
   Serial.begin(9600);
 
@@ -298,7 +298,7 @@ void Cansat::running() {
     //    }
 
     countRunning++;
-    if (countRunning < 15) {
+    if (countRunning < 200) {
       rightMotor.go(255);
       leftMotor.go(255);
     }
@@ -376,7 +376,6 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
     rightMotor.go(255);
     leftMotor.go(255 * (1 - bodyAngle / 180));
   }
-  delay(500);
 }
 
 
@@ -574,7 +573,7 @@ void Cansat::guidance4() {
     sort(vol, freq, number);
 
     // ゴール判定は毎ループやる
-    if (vol[0] > 60)state = GOAL;//ここのifの条件式の数字をいじることで閾値を変更可能
+    if (vol[0] > 60)state = GOAL2;//ここのifの条件式の数字をいじることで閾値を変更可能
     // if (distance2 < 50 && distance2 > 0)state = GOAL;
 
     if (millis() - guidance4Time < GUIDANCE4_TIME_THRE) {
@@ -630,7 +629,7 @@ void Cansat::guidance4() {
         soundfreq = freq[0];
         distance2 = distance_candidate;
         if (distance2 < 400) {
-          GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 1000; //テスト用
+          GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 1500; //テスト用
           digitalWrite(RED_LED_PIN, LOW);
           digitalWrite(BLUE_LED_PIN, HIGH);
           digitalWrite(GREEN_LED_PIN, HIGH);
@@ -641,7 +640,7 @@ void Cansat::guidance4() {
         soundfreq = freq[0];
         distance2 = distance_candidate;
         if (distance2 < 400) {
-          GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 1000; //テスト用
+          GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 1500; //テスト用
           digitalWrite(RED_LED_PIN, LOW);
           digitalWrite(BLUE_LED_PIN, HIGH);
           digitalWrite(GREEN_LED_PIN, HIGH);
@@ -735,6 +734,7 @@ void Cansat::goal2() {
   }
   else {
     guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+    delay(200);
   }
 }
 ///////////////////////////////////////////////////////////////////////////////////

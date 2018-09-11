@@ -8,15 +8,15 @@
 
 //ピン番号指定
 #define LEFT_MOTOR_VREF_PIN 4
-//#define LEFT_MOTOR_IN1_PIN 3 // 回路2機体2
-//#define LEFT_MOTOR_IN2_PIN 2 // 回路2機体2
-#define LEFT_MOTOR_IN1_PIN 2 // 回路3機体1
-#define LEFT_MOTOR_IN2_PIN 3 // 回路3機体1
+#define LEFT_MOTOR_IN1_PIN 2 // 回路2機体2
+#define LEFT_MOTOR_IN2_PIN 3 // 回路2機体2
+//#define LEFT_MOTOR_IN1_PIN 2 // 回路3機体1
+//#define LEFT_MOTOR_IN2_PIN 3 // 回路3機体1
 #define RIGHT_MOTOR_VREF_PIN 45
-//#define RIGHT_MOTOR_IN1_PIN 44 // 回路2機体2
-//#define RIGHT_MOTOR_IN2_PIN 46 // 回路2機体2
-#define RIGHT_MOTOR_IN1_PIN 44 // 回路3機体1
-#define RIGHT_MOTOR_IN2_PIN 46 // 回路3機体1
+#define RIGHT_MOTOR_IN1_PIN 46 // 回路2機体2
+#define RIGHT_MOTOR_IN2_PIN 44 // 回路2機体2
+//#define RIGHT_MOTOR_IN1_PIN 44 // 回路3機体1
+//#define RIGHT_MOTOR_IN2_PIN 46 // 回路3機体1
 #define RED_LED_PIN A9
 #define BLUE_LED_PIN A5
 #define GREEN_LED_PIN A4
@@ -57,7 +57,7 @@
 #define RELEASING2_TIME_THRE 15000
 #define COUNT_RELEASING_LOOP_THRE 50
 #define GOAL_THRE 5
-#define GUIDANCE4_TIME_THRE 24000
+#define GUIDANCE4_TIME_THRE 17000
 //#define GUIDANCE4_TIME_THRE2 3000
 #define N 35
 
