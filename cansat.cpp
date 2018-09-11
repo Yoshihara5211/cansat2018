@@ -298,7 +298,7 @@ void Cansat::running() {
     //    }
 
     countRunning++;
-    if (countRunning < 200) {
+    if (countRunning < 10) {
       rightMotor.go(255);
       leftMotor.go(255);
     }

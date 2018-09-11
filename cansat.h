@@ -75,7 +75,7 @@ class Cansat {
     void goal2();
 
     // 変数
-    int state = 4;
+    int state = 0;
     int laststate = 0;
 
     float destLon;
