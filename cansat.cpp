@@ -729,12 +729,12 @@ void Cansat::goal2() {
     digitalWrite(BLUE_LED_PIN, LOW); delay(100);
     digitalWrite(GREEN_LED_PIN, LOW); delay(100);
   }
-  else if (countGoal = 50) {
+  else if (countGoal == 50) {
     tone(BUZZER_PIN, 523, 3000);
   }
   else {
     guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-    delay(200);
+    delay(20);
   }
 }
 ///////////////////////////////////////////////////////////////////////////////////

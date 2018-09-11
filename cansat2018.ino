@@ -23,5 +23,9 @@ void setup() {
 
 void loop() {
   cansat.sensor();
+  delay(50); // 1機目
+//  delay(70); // 2機目
   cansat.sequence();
+  delay(50); // 1機目
+//  delay(70); // 2機目
 }

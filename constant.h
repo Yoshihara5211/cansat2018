@@ -8,15 +8,15 @@
 
 //ピン番号指定
 #define LEFT_MOTOR_VREF_PIN 4
-#define LEFT_MOTOR_IN1_PIN 2 // 回路2機体2
-#define LEFT_MOTOR_IN2_PIN 3 // 回路2機体2
-//#define LEFT_MOTOR_IN1_PIN 2 // 回路3機体1
-//#define LEFT_MOTOR_IN2_PIN 3 // 回路3機体1
+//#define LEFT_MOTOR_IN1_PIN 2 // 回路2機体2
+//#define LEFT_MOTOR_IN2_PIN 3 // 回路2機体2
+#define LEFT_MOTOR_IN1_PIN 2 // 回路3機体1
+#define LEFT_MOTOR_IN2_PIN 3 // 回路3機体1
 #define RIGHT_MOTOR_VREF_PIN 45
-#define RIGHT_MOTOR_IN1_PIN 46 // 回路2機体2
-#define RIGHT_MOTOR_IN2_PIN 44 // 回路2機体2
-//#define RIGHT_MOTOR_IN1_PIN 44 // 回路3機体1
-//#define RIGHT_MOTOR_IN2_PIN 46 // 回路3機体1
+//#define RIGHT_MOTOR_IN1_PIN 46 // 回路2機体2
+//#define RIGHT_MOTOR_IN2_PIN 44 // 回路2機体2
+#define RIGHT_MOTOR_IN1_PIN 46 // 回路3機体1
+#define RIGHT_MOTOR_IN2_PIN 44 // 回路3機体1
 #define RED_LED_PIN A9
 #define BLUE_LED_PIN A5
 #define GREEN_LED_PIN A4
@@ -46,12 +46,12 @@
 
 //閾値
 #define LIGHT1_THRE 50
-#define COUNT_LIGHT1_LOOP_THRE 50
-#define LIGHT2_THRE 50
-#define COUNT_LIGHT2_LOOP_THRE 50
-#define ACC_THRE 12
-#define COUNT_ACC_LOOP_THRE 50
-#define LANDING_TIME_THRE 500000
+#define COUNT_LIGHT1_LOOP_THRE 100
+#define LIGHT2_THRE 300
+#define COUNT_LIGHT2_LOOP_THRE 100
+#define ACC_THRE 13
+#define COUNT_ACC_LOOP_THRE 1000
+const unsigned long LANDING_TIME_THRE = 2400*1000; // 60s*40m*1000ms state2に入ってから40mで着地検知
 //#define RELEASING1_TIME_THRE 15000
 //#define RELEASING1_TIME2_THRE 30000
 #define RELEASING2_TIME_THRE 15000
