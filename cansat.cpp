@@ -19,9 +19,9 @@ Cansat::~Cansat() {
 // setup関数
 ///////////////////////////////////////////////////////////////////////////////////
 void Cansat::setup() {
-// setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
-//  setGoal(40.14236.80, 139.9873000);  // ゴール設定(能代)
-setGoal(40.52805, -119.07297);  // ゴール設定(AIRLLIS)
+  // setGoal(139.657881, 35.554789);  // ゴール設定(矢上グラウンド奥)
+  //  setGoal(40.14236.80, 139.9873000);  // ゴール設定(能代)
+  setGoal(40.52805, -119.07297);  // ゴール設定(AIRLLIS)
 
   Serial.begin(9600);
 
@@ -302,27 +302,27 @@ void Cansat::running() {
       rightMotor.go(255);
       leftMotor.go(255);
     }
-//    else if (countRunning == 10) {
-//      digitalWrite(RED_LED_PIN, LOW);
-//      digitalWrite(BLUE_LED_PIN, HIGH);
-//      digitalWrite(GREEN_LED_PIN, LOW);
-//      tone(BUZZER_PIN, 523, 2000);
-//      compass.calibration2();
-//    }
+    //    else if (countRunning == 10) {
+    //      digitalWrite(RED_LED_PIN, LOW);
+    //      digitalWrite(BLUE_LED_PIN, HIGH);
+    //      digitalWrite(GREEN_LED_PIN, LOW);
+    //      tone(BUZZER_PIN, 523, 2000);
+    //      compass.calibration2();
+    //    }
     else {
       guidance4();
       NowRunningTime = millis() - runningTime;
     }
 
     // GPS無しでは停止
-//      if (gps.lat < 1 && gps.lon < 1) {
-//        leftMotor.stop();
-//        rightMotor.stop();
-//      }
-//      else {
-//        guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-//        if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
-//      }
+    //      if (gps.lat < 1 && gps.lon < 1) {
+    //        leftMotor.stop();
+    //        rightMotor.stop();
+    //      }
+    //      else {
+    //        guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+    //        if (fabs(destLon - gps.lon) <= GOAL_THRE && fabs(destLat - gps.lat) <= GOAL_THRE) state = GOAL;
+    //      }
   }
 }
 
@@ -336,12 +336,12 @@ void Cansat::guidance1(float nowLon, float nowLat, float nowDeg, float goalLon, 
   distance = sqrt(pow(deltaLat, 2) + pow(deltaLon, 2));
   // 機体座標に変換，回転行列使うよ，deg2radするよ
   // nowDegを0°～360°に変換
-  if (nowDeg < 0){
+  if (nowDeg < 0) {
     deg = 360 + nowDeg;
-    }
-    else {
-      deg = nowDeg;
-      }
+  }
+  else {
+    deg = nowDeg;
+  }
   bodyLon = deltaLon * cos(deg / 180 * M_PI) + deltaLat * sin(deg / 180 * M_PI); // [x'] =  [cos(th)     sin(th)] [x]
   bodyLat = deltaLon * sin(deg / 180 * M_PI) + deltaLat * cos(deg / 180 * M_PI); // [y']   [-sin(th)    cos(th)] [y]
 
@@ -592,35 +592,43 @@ void Cansat::guidance4() {
         switch (freq[0]) {
           case N+1:
             //            distance_candidate = round(-159.8 * log(vol[0]) + 631.1);
-            distance_candidate = round(897.69 * exp(-0.042 * vol[0]));
+            //            distance_candidate = round(897.69 * exp(-0.042 * vol[0]));//矢上グランド
+            distance_candidate = round(5937.4 * pow(vol[0], -1.192)); //ARLISS
             break;
           case N+2:
             //            distance_candidate = round(-161.6 * log(vol[0]) + 637.61);
-            distance_candidate = round(912.47 * exp(-0.038 * vol[0]));
+            //            distance_candidate = round(912.47 * exp(-0.038 * vol[0]));//矢上グランド
+            distance_candidate = round(7345.5 * pow(vol[0], -1.235)); //ARLISS
             break;
           case N+3:
             //            distance_candidate = round(-160.2 * log(vol[0]) + 628.52);
-            distance_candidate = round(944.43 * exp(-0.035 * vol[0]));
+            //            distance_candidate = round(944.43 * exp(-0.035 * vol[0]));//矢上グランド
+            distance_candidate = round(7468.7 * pow(vol[0], -1.239)); //ARLISS
             break;
           case N+4:
             //            distance_candidate = round(-148.1 * log(vol[0]) + 585.04);
-            distance_candidate = round(953.2 * exp(-0.033 * vol[0]));
+            //            distance_candidate = round(953.2 * exp(-0.033 * vol[0]));//矢上グランド
+            distance_candidate = round(10036 * pow(vol[0], -1.319)); //ARLISS
             break;
           case N+5:
             //            distance_candidate = round(-143.1 * log(vol[0]) + 562.17);
-            distance_candidate = round(996.23 * exp(-0.033 * vol[0]));
+            //            distance_candidate = round(996.23 * exp(-0.033 * vol[0]));//矢上グランド
+            distance_candidate = round(8164.1 * pow(vol[0], -1.293)); //ARLISS
             break;
           case N+6:
             //            distance_candidate = round(-131.6 * log(vol[0]) + 513.86);
-            distance_candidate = round(948.72 * exp(-0.031 * vol[0]));
+            //            distance_candidate = round(948.72 * exp(-0.031 * vol[0]));//矢上グランド
+            distance_candidate = round(4873 * pow(vol[0], -1.209)); //ARLISS
             break;
           case N+7:
             //            distance_candidate = round(-123.2 * log(vol[0]) + 472.33);
-            distance_candidate = round(907.8 * exp(-0.033 * vol[0]));
+            //            distance_candidate = round(907.8 * exp(-0.033 * vol[0]));//矢上グランド
+            distance_candidate = round(2333.2 * pow(vol[0], -1.065)); //ARLISS
             break;
           case N+8:
             //            distance_candidate = round(-106.9 * log(vol[0]) + 417.9);
-            distance_candidate = round(823.26 * exp(-0.035 * vol[0]));
+            //            distance_candidate = round(823.26 * exp(-0.035 * vol[0]));//矢上グランド
+            distance_candidate = round(2100.1 * pow(vol[0], -1.074)); //ARLISS
             break;
         }
       }
@@ -733,8 +741,15 @@ void Cansat::goal2() {
     tone(BUZZER_PIN, 523, 3000);
   }
   else {
-    guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
-    delay(20);
+    // GPS無しでは停止
+    if (gps.lat < 1 && gps.lon < 1) {
+      leftMotor.stop();
+      rightMotor.stop();
+    }
+    else {
+      guidance1(gps.lon, gps.lat, compass.deg, destLon, destLat);
+      delay(20);
+    }
   }
 }
 ///////////////////////////////////////////////////////////////////////////////////

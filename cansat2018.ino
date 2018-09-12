@@ -1,5 +1,3 @@
-
-
 /**
   @file cansat2018.ino
   @brief CanSat Project 2018
