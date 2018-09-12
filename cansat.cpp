@@ -140,8 +140,7 @@ void Cansat::sendXbee() {
                      + String(distance3) + ","
                      + String(soundvol) + ","
                      + String(millis() - guidance4Time) + ","
-                     + String(NowRunningTime) + ","
-                     + String(bodyAngle) + ","
+                     + String(countPreLoop) + ","
                      + String(direct) + ","
                      + "e";
   radio.sendData(send_data);
@@ -265,7 +264,7 @@ void Cansat::landing() {
   }
   // 着地フェーズでは第2パラシュート分離を行う
   digitalWrite(RELEASING2_PIN, HIGH);
-  countReleasingLoop++;
+//  countReleasingLoop++;
   //  if (landingTime != 0) {
   //    if (countReleasingLoop > COUNT_RELEASING_LOOP_THRE) {
   //      digitalWrite(RELEASING2_PIN, LOW);
@@ -636,7 +635,7 @@ void Cansat::guidance4() {
         soundvol = vol[0];
         soundfreq = freq[0];
         distance2 = distance_candidate;
-        if (distance2 < 400) {
+        if (distance2 < 200) {
           GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 1500; //テスト用
           digitalWrite(RED_LED_PIN, LOW);
           digitalWrite(BLUE_LED_PIN, HIGH);
@@ -647,7 +646,7 @@ void Cansat::guidance4() {
         soundvol = vol[0];
         soundfreq = freq[0];
         distance2 = distance_candidate;
-        if (distance2 < 400) {
+        if (distance2 < 200) {
           GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 1500; //テスト用
           digitalWrite(RED_LED_PIN, LOW);
           digitalWrite(BLUE_LED_PIN, HIGH);

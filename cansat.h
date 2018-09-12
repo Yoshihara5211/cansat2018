@@ -115,7 +115,7 @@ class Cansat {
     int direct2 = 0;
     float directDeg;
     float directAngle;
-    unsigned long GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE+3000;//テスト用
+    unsigned long GUIDANCE4_TIME_THRE2 = GUIDANCE4_TIME_THRE + 3000;//テスト用
 };
 
 #endif

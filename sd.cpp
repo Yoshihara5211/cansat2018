@@ -37,15 +37,13 @@ void Sd::setupSd() {
   printSd("     ");
   printSd("     ");
   printSd("     ");
-  
   printSd("     ");
-  printSd("     ");
-    
+  printSd("     ");  
   printSd(log_name);
 }
 
 void Sd::printSd(String log_data) {
-  File file = SD.open("0911yoru.txt", FILE_WRITE);//.txtの前は半角、8文字まで
+  File file = SD.open("0914AIR.txt", FILE_WRITE);//.txtの前は半角、8文字まで
   String _log_data = log_data;  // ログ保存データ
   if (file) {                                      //if the file in the SD card was open to wrihte, true or false
     file.println(_log_data);                          // write data into the file,
