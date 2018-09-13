@@ -48,7 +48,7 @@
 #define LIGHT1_THRE 50
 #define COUNT_LIGHT1_LOOP_THRE 300
 #define LIGHT2_THRE 300
-#define COUNT_LIGHT2_LOOP_THRE 100
+#define COUNT_LIGHT2_LOOP_THRE 150
 #define ACC_THRE 12
 #define COUNT_ACC_LOOP_THRE 500
 const unsigned long LANDING_TIME_THRE = 2400*1000; // 60s*40m*1000ms state2に入ってから40mで着地検知

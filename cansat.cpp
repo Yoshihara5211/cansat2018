@@ -114,7 +114,10 @@ void Cansat::writeSd() {
                     + String(distance3) + ","
                     + String(soundvol) + ","
                     + String(millis() - guidance4Time) + ","
-                    + String(NowRunningTime);
+                    + String(countPreLoop) + "," // state0の光センサ50以下ループ数
+                    + String(countDropLoop) + "," // state2の加速度の2乗和が12の2乗以下ループ数
+                    + String(millis() - landingTime) + "," // state2に入ってからのmilliis()
+                    + String(direct); // guidance1の指令値
   sd.printSd(log_data);
 }
 
@@ -140,8 +143,10 @@ void Cansat::sendXbee() {
                      + String(distance3) + ","
                      + String(soundvol) + ","
                      + String(millis() - guidance4Time) + ","
-                     + String(countPreLoop) + ","
-                     + String(direct) + ","
+                     + String(countPreLoop) + "," // state0の光センサ50以下ループ数
+                     + String(countDropLoop) + "," // state2の加速度の2乗和が12の2乗以下ループ数
+                     + String(millis() - landingTime) + "," // state2に入ってからのmilliis()
+                     + String(direct) + "," // guidance1の指令値
                      + "e";
   radio.sendData(send_data);
 }
